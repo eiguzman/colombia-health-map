@@ -1,0 +1,25 @@
+/* Better Defaults */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+/* Wrapper Setup */
+body {
+    font: 100%/1.5 sans-serif, system-ui;
+    display: flex;
+    flex-flow: column;
+    max-width: 80ch;
+    min-height: 100vh;
+    margin: auto;
+    padding: 1em;
+}
+
+div {
+    padding: 1em;
+    background-color: orangered;
+    color: white;
+    border-radius: 0.5em;
+}
