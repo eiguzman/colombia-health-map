@@ -17,9 +17,20 @@ body {
     padding: 1em;
 }
 
-div {
-    padding: 1em;
-    background-color: orangered;
-    color: white;
-    border-radius: 0.5em;
+#map-container {
+    border: 1px solid black;
+}
+
+#map {
+    width: 100%;
+    height: fit-content;
+}
+
+#map-label {
+    display: flex;
+    justify-content: space-between;
+}
+
+#map-slider {
+    width: 100%;
 }
