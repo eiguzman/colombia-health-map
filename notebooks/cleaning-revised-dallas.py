@@ -60,6 +60,11 @@ gdf = gdf.set_crs(epsg=4326)
 gdf = gdf.drop(columns=['id', 'codigo_municipio_s'])
 gdf.columns = ['id', 'geometry']
 gdf['id'] = gdf['id'].astype(int)
+# set to spherical mercator projection
+gdf = gdf.to_crs(epsg=3857)
+gdf["area"] = gdf['geometry'].area / 1e6
+# set back to standard web mercator projection
+gdf = gdf.to_crs(epsg=4326)
 
 # ----------------------------
 # ---[combine meta and geo]---
@@ -76,24 +81,19 @@ columns_order = [
     "area", "geometry"
 ]
 merged = merged.reindex(columns=columns_order)
-# set to spherical mercator projection
-merged = merged.to_crs(epsg=3857)
-merged["area_km2"] = merged['geometry'].area / 1e6
-# set back to standard web mercator projection
-merged = merged.to_crs(epsg=4326)
 
 # ----------------
 # ---[map test]---
 # ----------------
 
 test = merged.copy()
-test["pop_density"] = test["pop2019"] / test["area_km2"]
+test["pop_density"] = test["pop2019"] / test["area"]
 population_density = (
     alt.Chart(test)
     .mark_geoshape()
     .encode(
-        tooltip=["name:N", 'area_km2:Q', 'pop2019:Q'],
-        color=alt.Color("area_km2:Q", scale=alt.Scale(type="log", scheme="reds"), title='area km²')
+        tooltip=["name:N", 'area:Q', 'pop2019:Q'],
+        color=alt.Color("area:Q", scale=alt.Scale(type="log", scheme="reds"), title='area km²')
     )
     .project(type="mercator")
     .properties(width=600, height=600, title='Colombia 2019 Population Density')

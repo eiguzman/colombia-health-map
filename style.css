@@ -1,4 +1,5 @@
 /* Better Defaults */
+
 *,
 *::before,
 *::after {
@@ -7,6 +8,7 @@
 }
 
 /* Wrapper Setup */
+
 body {
     font: 100%/1.5 sans-serif, system-ui;
     display: flex;
@@ -16,6 +18,8 @@ body {
     margin: auto;
     padding: 1em;
 }
+
+/* Map Component */
 
 #map-container {
     border: 1px solid black;
@@ -33,4 +37,13 @@ body {
 
 #map-slider {
     width: 100%;
+}
+
+#tooltip {
+    position: absolute;
+    background: white;
+    padding: 5px;
+    border: 1px solid black;
+    pointer-events: none;
+    opacity: 0;
 }
