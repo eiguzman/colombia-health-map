@@ -6,7 +6,7 @@ const state = {
 };
 
 async function loadData() {
-    state.data = await d3.json("data/master.geojson");
+    state.data = await d3.json("data/incident.geojson");
 }
 
 function setupSlider() {
@@ -16,7 +16,7 @@ function setupSlider() {
     slider.addEventListener("input", (event) => {
         state.year = +event.target.value;
         label.textContent = state.year;
-        updateMap(state);  // 🔹 This will now update the map when the slider moves
+        updateMap(state);
     });
 }
 
@@ -25,6 +25,8 @@ async function initApp() {
     if (state.data) {
         drawMap("#map", state);
         setupSlider();
+        drawLegend(state);
+        d3.select("#tooltip").style("position", "absolute").style("opacity", 0);
     }
 }
 

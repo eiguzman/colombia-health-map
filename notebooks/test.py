@@ -8,51 +8,45 @@ df = pd.read_csv('../data/meta.csv')
 df = df.drop(columns=['illiterate', 'education', 'employed', 'unemployed', 'men', 'women', 'water', 'internet'])
 
 population = df[[f'pop{year}' for year in range(2007, 2020)]].values
+population = np.where(population == 0, np.nan, population)
 cases = df[[f'cases{year}' for year in range(2007, 2020)]].values
 
 incident = pd.DataFrame(cases / population * 100_000)
-incident.columns = [f'incident{year}' for year in range(2007, 2020)]
+incident.columns = [f'incident_{year}' for year in range(2007, 2020)]
 
 gdf = gpd.read_file('../data/geo.geojson')
 
-test = pd.concat([
+combined = pd.concat([
     df[['id', 'name']],
     incident
 ], axis=1)
 
-test = test.merge(gdf, how='left', on='id')
-# test = test[['id', 'name', 'incident2019', 'geometry']]
-test = gpd.GeoDataFrame(test)
+combined = combined.merge(gdf[['id', 'geometry']], how='left', on='id')
 
-(
-    alt.Chart(test)
-    .mark_geoshape()
-    .encode(
-        tooltip=["name:N", 'incident2007:Q'],
-        color=alt.Color("incident2007:Q", scale=alt.Scale(type="log", scheme="reds", domain=[0,15000]))
-    )
-    .project(type="mercator")
-    .properties(width=600, height=600)
-)
+combined = gpd.GeoDataFrame(combined)
 
-# Replace zeroes with 1 (log(1) = 0)
-test["incident2007"] = test["incident2007"].replace(0, 1)
-test["incident2008"] = test["incident2008"].replace(0, 1)
-test["incident2009"] = test["incident2009"].replace(0, 1)
-test["incident2010"] = test["incident2010"].replace(0, 1)
+# incident rate per 100,000 people
+combined.to_file('../data/incident.geojson', driver='GeoJSON')
 
-chart = (
-    alt.Chart(test)
-    .mark_geoshape()
-    .encode(
-        tooltip=["name:N", "incident2009:Q"],
-        color=alt.Color(
-            "incident2009:Q",
-            scale=alt.Scale(type="log", scheme="reds", domainMin=1, domainMax=15000),
-        ),
-    )
-    .project(type="mercator")
-    .properties(width=600, height=600)
-)
+# combined_melted = combined.melt(
+#     id_vars=["id", "name", "geometry"], 
+#     var_name="year", 
+#     value_name="incident",
+#     value_vars=[f"incident_{y}" for y in range(2007, 2020)]
+# )
+# combined_melted["year"] = combined_melted["year"].str.extract(r'(\d+)').astype(int)
+# combined_melted = combined_melted[['id', 'name', 'year', 'incident', 'geometry']]
+# combined_melted = gpd.GeoDataFrame(combined_melted)
 
-chart
+# (
+#     alt.Chart(combined)
+#     .mark_geoshape()
+#     .encode(
+#         tooltip=["name:N", 'incident_2019:Q'],
+#         color=alt.Color(
+#             "incident_2019:Q",
+#             scale=alt.Scale(type="linear", scheme="reds"))
+#     )
+#     .project(type="mercator")
+#     .properties(width=600, height=600)
+# )

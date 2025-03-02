@@ -9,51 +9,98 @@ export function drawMap(containerId, state) {
     state.path = d3.geoPath().projection(state.projection);
     state.svg = svg;
 
-    // 🔹 Draw the map once, keeping references for future updates
     state.paths = svg.selectAll("path")
         .data(state.data.features)
         .join("path")
         .attr("d", state.path)
-        .attr("stroke", "white")
-        .attr("stroke-width", "0.1")
         .on("mouseover", (event, d) => {
             d3.select("#tooltip")
                 .style("opacity", 1)
                 .html(`
                     Name: ${d.properties.name}<br>
-                    Cases: ${d.properties[`cases${state.year}`] || 0}<br>
+                    Incidence Rate: ${(d.properties[`incident_${state.year}`] || 0).toFixed(2)} per 100k<br>
                     Year: ${state.year}
                 `);
         })
         .on("mousemove", (event) => {
             d3.select("#tooltip")
-                .style("left", event.pageX + "px")
-                .style("top", event.pageY + "px");
+                .style("left", event.clientX + "px")
+                .style("top", event.clientY + "px");
         })
         .on("mouseout", () => {
             d3.select("#tooltip").style("opacity", 0);
         });
 
-    updateMap(state);  // 🔹 Initial color update based on cases
+    updateMap(state);
 }
 
 export function updateMap(state) {
     const year = state.year;
 
-    state.data.features.forEach(feature => {
-        const area = parseFloat(feature.properties.area) || 1;  // Avoid division by zero
-        const cases = parseFloat(feature.properties[`cases${year}`]) || 0;
-        feature.properties.caseDensity = cases / area;
-    });
+    const caseCounts = state.data.features.map(d => d.properties[`incident_${year}`] || 0);
+    const maxCases = Math.max(...caseCounts) || 1;
 
-    const caseDensities = state.data.features.map(d => d.properties.caseDensity).filter(d => d > 0);
-    const maxDensity = Math.max(...caseDensities) || 1;  // Ensure valid max
+    const colorScale = d3.scaleSequential(d3.interpolateReds)
+        .domain([0, maxCases]);
 
-    const colorScale = d3.scaleLinear()
-        .domain([0, maxDensity])  // 🔹 Linear scale instead of log
-        .range(["#f7fbff", "#de2d26"]);  // 🔹 Light blue → Red for hotspots
+    state.svg.selectAll("path")
+        .transition()
+        .duration(750)
+        .ease(d3.easeCubicOut)
+        .attr("fill", d => colorScale(d.properties[`incident_${year}`] || 0));
 
-    state.paths.transition()
-        .duration(300)
-        .attr("fill", d => colorScale(d.properties.caseDensity || 0));
+    drawLegend(state);
+}
+
+export function drawLegend(state) {
+    const legendWidth = 300;
+    const legendHeight = 20;
+    const margin = { left: 20, right: 20 };
+
+    d3.select("#legend").select("svg").remove();
+
+    const svg = d3.select("#legend")
+        .append("svg")
+        .attr("width", legendWidth + margin.left + margin.right)
+        .attr("height", 50);
+
+    const caseCounts = state.data.features.map(d => d.properties[`incident_${state.year}`] || 0);
+    const maxCases = Math.max(...caseCounts) || 1;
+
+    const colorScale = d3.scaleSequential(d3.interpolateReds)
+        .domain([0, maxCases]);
+
+    const legendScale = d3.scaleLinear()
+        .domain([0, maxCases])
+        .range([0, legendWidth]);
+
+    const defs = svg.append("defs");
+    const linearGradient = defs.append("linearGradient")
+        .attr("id", "legend-gradient")
+        .attr("x1", "0%").attr("y1", "0%")
+        .attr("x2", "100%").attr("y2", "0%");
+
+    linearGradient.selectAll("stop")
+        .data(d3.range(0, 1.01, 0.1))
+        .enter().append("stop")
+        .attr("offset", d => `${d * 100}%`)
+        .attr("stop-color", d => colorScale(d * maxCases));
+
+    svg.append("rect")
+        .attr("x", margin.left)
+        .attr("y", 10)
+        .attr("width", legendWidth)
+        .attr("height", legendHeight)
+        .style("fill", "url(#legend-gradient)");
+
+    const axis = d3.axisBottom(legendScale)
+        .ticks(5)
+        .tickSize(5)
+        .tickFormat(d3.format(".0f"));
+
+    svg.append("g")
+        .attr("transform", `translate(${margin.left}, ${legendHeight + 10})`)
+        .call(axis)
+        .select(".domain")
+        .remove();
 }
