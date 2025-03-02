@@ -7,7 +7,17 @@ const state = {
 
 async function loadData() {
     state.data = await d3.json("data/incident.geojson");
+
+    state.globalMaxCases = 0;
+    state.data.features.forEach(d => {
+        Object.keys(d.properties).forEach(key => {
+            if (key.startsWith("incident_")) {
+                state.globalMaxCases = Math.max(state.globalMaxCases, d.properties[key] || 0);
+            }
+        });
+    });
 }
+
 
 function setupSlider() {
     const slider = document.getElementById("map-slider");

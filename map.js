@@ -37,8 +37,7 @@ export function drawMap(containerId, state) {
 export function updateMap(state) {
     const year = state.year;
 
-    const caseCounts = state.data.features.map(d => d.properties[`incident_${year}`] || 0);
-    const maxCases = Math.max(...caseCounts) || 1;
+    const maxCases = state.globalMaxCases || 1;
 
     const colorScale = d3.scaleSequential(d3.interpolateReds)
         .domain([0, maxCases]);
@@ -64,8 +63,7 @@ export function drawLegend(state) {
         .attr("width", legendWidth + margin.left + margin.right)
         .attr("height", 50);
 
-    const caseCounts = state.data.features.map(d => d.properties[`incident_${state.year}`] || 0);
-    const maxCases = Math.max(...caseCounts) || 1;
+    const maxCases = state.globalMaxCases || 1;
 
     const colorScale = d3.scaleSequential(d3.interpolateReds)
         .domain([0, maxCases]);
