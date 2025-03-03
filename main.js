@@ -1,4 +1,6 @@
 import { drawMap, updateMap, drawLegend } from "./map.js";
+import { updateText } from "./text.js";  
+
 
 const state = {
     data: null,
@@ -27,7 +29,10 @@ function setupSlider() {
         state.year = +event.target.value;
         label.textContent = state.year;
         updateMap(state);
+        updateText(state.year);
     });
+
+    updateText(state.year);
 }
 
 async function initApp() {
