@@ -61,16 +61,19 @@ export function updateMap(state) {
 }
 
 export function drawLegend(state) {
-    const legendWidth = 400;
+    const legendContainer = document.getElementById("legend");
+    const legendWidth = Math.min(legendContainer.clientWidth, 400);
     const legendHeight = 20;
-    const margin = { left: 20, right: 20 };
+    const margin = { left: 10, right: 10 };
 
     d3.select("#legend").select("svg").remove();
 
     const svg = d3.select("#legend")
         .append("svg")
-        .attr("width", legendWidth + margin.left + margin.right)
-        .attr("height", 50);
+        .attr("width", "100%")
+        .attr("height", "50")
+        .attr("viewBox", `0 0 ${legendWidth + margin.left + margin.right} 50`)
+        .attr("preserveAspectRatio", "xMidYMid meet");
 
     const maxCases = state.globalMaxCases || 1;
 

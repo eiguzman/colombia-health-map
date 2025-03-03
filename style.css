@@ -23,6 +23,10 @@ body {
 
 #map-container {
     border: 1px solid black;
+    display: flex;
+    flex-flow: column;
+    gap: 1em;
+    align-items: center;
 }
 
 #map-container p {
@@ -37,11 +41,14 @@ body {
 #map-label {
     display: flex;
     justify-content: space-between;
+    width: 100%;
+    max-width: 400px;
 }
 
 #map-slider {
     appearance: none;
     width: 100%;
+    max-width: 400px;
     height: 8px;
     background: darkgray;
     border-radius: 5px;
@@ -66,5 +73,15 @@ body {
 }
 
 #legend {
-    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#legend svg {
+    width: 100%;
+    height: auto;
 }
