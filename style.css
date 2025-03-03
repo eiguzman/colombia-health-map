@@ -13,7 +13,7 @@ body {
     font: 100%/1.5 sans-serif, system-ui;
     display: flex;
     flex-flow: column;
-    max-width: 80ch;
+    max-width: 120ch;
     min-height: 100vh;
     margin: auto;
     padding: 1em;

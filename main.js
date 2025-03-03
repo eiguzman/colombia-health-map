@@ -1,4 +1,4 @@
-import { drawMap, updateMap } from "./map.js";
+import { drawMap, updateMap, drawLegend } from "./map.js";
 
 const state = {
     data: null,
