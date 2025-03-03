@@ -36,17 +36,17 @@ export function drawMap(containerId, state) {
 
 export function updateMap(state) {
     const year = state.year;
-
     const maxCases = state.globalMaxCases || 1;
 
     const colorScale = d3.scaleSequential(d3.interpolateReds)
-        .domain([0, maxCases]);
+        .domain([Math.log1p(1), Math.log1p(maxCases)])
+        .interpolator(d => d3.interpolateReds((Math.log1p(d) - Math.log1p(1)) / (Math.log1p(maxCases) - Math.log1p(1))));
 
     state.svg.selectAll("path")
         .transition()
         .duration(750)
         .ease(d3.easeCubicOut)
-        .attr("fill", d => colorScale(d.properties[`incident_${year}`] || 0));
+        .attr("fill", d => colorScale(d.properties[`incident_${year}`] || 1));
 
     drawLegend(state);
 }
@@ -68,8 +68,8 @@ export function drawLegend(state) {
     const colorScale = d3.scaleSequential(d3.interpolateReds)
         .domain([0, maxCases]);
 
-    const legendScale = d3.scaleLinear()
-        .domain([0, maxCases])
+    const legendScale = d3.scaleLog()
+        .domain([1, maxCases])
         .range([0, legendWidth]);
 
     const defs = svg.append("defs");
@@ -92,9 +92,8 @@ export function drawLegend(state) {
         .style("fill", "url(#legend-gradient)");
 
     const axis = d3.axisBottom(legendScale)
-        .ticks(5)
-        .tickSize(5)
-        .tickFormat(d3.format(".0f"));
+        .ticks(5, d3.format(".0f"))
+        .tickSize(5);
 
     svg.append("g")
         .attr("transform", `translate(${margin.left}, ${legendHeight + 10})`)
