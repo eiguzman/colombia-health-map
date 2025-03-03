@@ -1,11 +1,20 @@
 export function drawMap(containerId, state) {
+    const bounds = d3.geoBounds(state.data);
+    const [[x0, y0], [x1, y1]] = bounds;
+
+    const width = 800;
+    const aspectRatio = (y1 - y0) / (x1 - x0);
+    const height = width * aspectRatio;
+
     const svg = d3.select(containerId)
         .attr("width", "100%")
         .attr("height", "100vh")
-        .attr("viewBox", "0 0 800 600")
+        .attr("viewBox", `0 0 ${width} ${height}`)
         .attr("preserveAspectRatio", "xMidYMid meet");
 
-    state.projection = d3.geoMercator().fitSize([800, 600], state.data);
+    state.projection = d3.geoMercator()
+        .fitExtent([[10, 10], [width - 10, height - 10]], state.data);
+
     state.path = d3.geoPath().projection(state.projection);
     state.svg = svg;
 
@@ -18,7 +27,7 @@ export function drawMap(containerId, state) {
                 .style("opacity", 1)
                 .html(`
                     Name: ${d.properties.name}<br>
-                    Incidence Rate: ${(d.properties[`incident_${state.year}`] || 0).toFixed(2)} per 100k<br>
+                    Incidence Rate: ${(d.properties[`incident_${state.year}`] || 0).toFixed(2)}<br>
                     Year: ${state.year}
                 `);
         })
@@ -52,7 +61,7 @@ export function updateMap(state) {
 }
 
 export function drawLegend(state) {
-    const legendWidth = 300;
+    const legendWidth = 400;
     const legendHeight = 20;
     const margin = { left: 20, right: 20 };
 

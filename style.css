@@ -13,7 +13,7 @@ body {
     font: 100%/1.5 sans-serif, system-ui;
     display: flex;
     flex-flow: column;
-    max-width: 120ch;
+    max-width: 80ch;
     min-height: 100vh;
     margin: auto;
     padding: 1em;
@@ -23,6 +23,10 @@ body {
 
 #map-container {
     border: 1px solid black;
+}
+
+#map-container p {
+    text-align: center;
 }
 
 #map {
@@ -36,7 +40,20 @@ body {
 }
 
 #map-slider {
+    appearance: none;
     width: 100%;
+    height: 8px;
+    background: darkgray;
+    border-radius: 5px;
+}
+
+#map-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: black;
+    border-radius: 50%;
+    cursor: pointer;
 }
 
 #tooltip {
@@ -49,6 +66,5 @@ body {
 }
 
 #legend {
-    margin-top: 10px;
     text-align: center;
 }
