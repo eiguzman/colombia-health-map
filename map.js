@@ -8,7 +8,7 @@ export function drawMap(containerId, state) {
 
     const svg = d3.select(containerId)
         .attr("width", "100%")
-        .attr("height", "100vh")
+        .attr("height", "100%")
         .attr("viewBox", `0 0 ${width} ${height}`)
         .attr("preserveAspectRatio", "xMidYMid meet");
 
