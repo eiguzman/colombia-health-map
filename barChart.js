@@ -1,94 +1,109 @@
-
+// barChart.js
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
-// Draws the initial horizontal bar chart.
+/**
+ * Draws an initial horizontal bar chart.
+ * - Creates scales, axes, and a group for bars.
+ * - Calls `updateBarChart(state)` to populate bars for the current year.
+ */
 export function drawBarChart(state) {
-  // Set up dimensions and margins for the bar chart.
-  const margin = { top: 20, right: 20, bottom: 30, left: 100 };
-  const width = 500 - margin.left - margin.right;
+  // Dimensions and margins
+  const margin = { top: 40, right: 20, bottom: 40, left: 150 };
+  const width = 600 - margin.left - margin.right;
   const height = 400 - margin.top - margin.bottom;
 
-  // Select the container SVG and set its dimensions.
+  // Select the <svg> and set its overall width & height
   const svg = d3.select("#bar-chart")
     .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", `translate(${margin.left},${margin.top})`);
+    .attr("height", height + margin.top + margin.bottom);
 
-  // Save chart settings in state for later use.
-  state.barChart = { svg, width, height, margin };
+  // Append a group to contain bars & axes
+  const g = svg.append("g")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-  // Draw the chart initially.
+  // Title
+  g.append("text")
+    .attr("class", "bar-chart-title")
+    .attr("x", 0)
+    .attr("y", -10)
+    .attr("font-size", "16px")
+    .attr("font-weight", "bold")
+    .text("Top 10 by Dengue Incidence");
+
+  // Store chart elements & scales in state so we can update them later
+  state.barChart = {
+    svg,      // the overall <svg>
+    g,        // the main group
+    width,
+    height,
+    margin,
+    xScale: d3.scaleLinear().range([0, width]),
+    yScale: d3.scaleBand().range([0, height]).padding(0.1),
+  };
+
+  // Draw initial axes groups (empty for now)
+  state.barChart.xAxisGroup = g.append("g")
+    .attr("class", "x-axis")
+    .attr("transform", `translate(0, ${height})`);
+
+  state.barChart.yAxisGroup = g.append("g")
+    .attr("class", "y-axis");
+
+  // Now populate bars based on the current year
   updateBarChart(state);
 }
 
-// Updates the horizontal bar chart based on the selected year.
+/**
+ * Updates the bar chart when the year changes (slider input).
+ * - Filters/sorts data for top 10.
+ * - Updates scales, bars, axes, and chart title with transitions.
+ */
 export function updateBarChart(state) {
+  const { g, xScale, yScale, xAxisGroup, yAxisGroup, width, height } = state.barChart;
   const year = state.year;
-  
-  // Create data array: for each region, get the incidence value for the selected year.
+
+  // Convert GeoJSON features -> array of { name, value } for the current year
   const data = state.data.features.map(d => ({
     name: d.properties.name,
     value: d.properties[`incident_${year}`] || 0
   }));
 
-  // Optionally, sort the data by value (highest first).
+  // Sort descending by value, then take top 10
   data.sort((a, b) => d3.descending(a.value, b.value));
+  const top10 = data.slice(0, 10);
 
-  const { svg, width, height } = state.barChart;
+  // Update scales
+  xScale.domain([0, d3.max(top10, d => d.value)]);
+  yScale.domain(top10.map(d => d.name));
 
-  // Create scales: x for values and y for region names (horizontal bars).
-  const x = d3.scaleLinear()
-    .domain([0, d3.max(data, d => d.value)])
-    .range([0, width]);
+  // Update or create bars
+  const bars = g.selectAll(".bar")
+    .data(top10, d => d.name);  // key by name
 
-  const y = d3.scaleBand()
-    .domain(data.map(d => d.name))
-    .range([0, height])
-    .padding(0.1);
-
-  // Data join for bars.
-  const bars = svg.selectAll(".bar")
-    .data(data, d => d.name);
-
-  // Update existing bars.
-  bars.transition()
-    .duration(750)
-    .attr("width", d => x(d.value))
-    .attr("y", d => y(d.name))
-    .attr("height", y.bandwidth());
-
-  // Enter new bars.
+  // ENTER + UPDATE
   bars.enter()
     .append("rect")
     .attr("class", "bar")
+    .merge(bars)
+    .transition()
+    .duration(750)
+    .attr("y", d => yScale(d.name))
     .attr("x", 0)
-    .attr("y", d => y(d.name))
-    .attr("height", y.bandwidth())
-    .attr("width", d => x(d.value))
-    .attr("fill", "steelblue");
+    .attr("height", yScale.bandwidth())
+    .attr("width", d => xScale(d.value))
+    .attr("fill", "#4682B4");
 
-  // Remove any bars that are no longer in the data.
+  // EXIT
   bars.exit().remove();
 
-  // Add or update the x-axis.
-  let xAxisGroup = svg.select(".x-axis");
-  if (xAxisGroup.empty()) {
-    xAxisGroup = svg.append("g")
-      .attr("class", "x-axis")
-      .attr("transform", `translate(0, ${height})`);
-  }
-  xAxisGroup.transition()
-    .duration(750)
-    .call(d3.axisBottom(x).ticks(5));
+  // Update axes with transitions
+  const xAxis = d3.axisBottom(xScale).ticks(5).tickFormat(d3.format(",.0f"));
+  xAxisGroup.transition().duration(750).call(xAxis);
 
-  // Add or update the y-axis.
-  let yAxisGroup = svg.select(".y-axis");
-  if (yAxisGroup.empty()) {
-    yAxisGroup = svg.append("g")
-      .attr("class", "y-axis");
-  }
-  yAxisGroup.transition()
-    .duration(750)
-    .call(d3.axisLeft(y));
+  const yAxis = d3.axisLeft(yScale);
+  yAxisGroup.transition().duration(750).call(yAxis);
+
+  // Update chart title to reflect current year
+  g.select(".bar-chart-title")
+    .text(`Top 10 by Dengue Incidence (${year})`);
 }
