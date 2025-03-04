@@ -17,6 +17,7 @@ body {
     min-height: 100vh;
     margin: auto;
     padding: 1em;
+    background-color: rgba(0, 0, 0, .1);
 }
 
 /* Map Component */
@@ -27,6 +28,8 @@ body {
     flex-flow: column;
     gap: 1em;
     align-items: center;
+    background-color: rgba(0, 0, 0, .2);
+    padding: 1em;
 }
 
 #map-container p {
@@ -49,9 +52,10 @@ body {
     appearance: none;
     width: 100%;
     max-width: 400px;
-    height: 8px;
+    height: 10px;
     background: darkgray;
     border-radius: 5px;
+    margin-bottom: 1em;
 }
 
 #map-slider::-webkit-slider-thumb {
