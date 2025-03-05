@@ -2,31 +2,30 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Mapping Colombia</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Mapping Colombia</title>
 </head>
 
 <body>
-    <div class="static">
+  <h1>Visualizing Dengue in Colombia</h1>
+  <p>From 2007 to 2019, dengue incidence in Colombia was highest in the eastern regions, where warm temperatures and tropical landscapes create ideal conditions for mosquito-borne transmission. In contrast, central municipalities, including Bogotá, consistently reported lower incidence rates, influenced by factors such as altitude, cooler climates, and better infrastructure. This project maps dengue trends over time, highlighting how geography and socio-economic factors shape the spread of the disease.</p>
+  <!-- <div class="static">
+  </div> -->
+  <!-- MAP COMPONENT -->
+  <div id="map-container">
+    <h2>Dengue Incidence Rate per 100,000 people</h2>
+    <div id="legend"></div>
+    <svg id="map"></svg>
+    <div id="tooltip"></div>
+    <div id="map-label">
+      <span>Year</span><span>2019</span>
     </div>
-    <!-- MAP COMPONENT -->
-    <div id="map-container">
-        <p>Dengue Incidence Rate per 100,000 people</p>
-        <div id="legend"></div>
-        <svg id="map"></svg>
-        <div id="tooltip"></div>
-        <div id="map-label">
-            <span>Year</span><span>2019</span>
-        </div>
-        <input type="range" name="map-slider" id="map-slider" min="2007" max="2019" value="2019" step="1">
-    </div>
-    <div id="year-info">
-        
-    </div>
+    <input type="range" name="map-slider" id="map-slider" min="2007" max="2019" value="2019" step="1">
+  </div>
 
-    <!-- Container for the bar chart -->
+  <!-- Container for the bar chart -->
   <div id="bar-chart-container">
     <svg id="bar-chart"></svg>
   </div>
@@ -34,11 +33,14 @@
   <div class="dynamic">
   </div>
 
+  <!-- TEMPORARILY COMMENTED OUT -->
+  <!-- <div id="year-info">
+  </div> -->
 
-    <!-- SCRIPTS -->
-    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-    <script type="module" src="main.js"></script>
-    <script type="module" src="dynamic.js"></script>
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script type="module" src="main.js"></script>
+  <script type="module" src="dynamic.js"></script>
 </body>
 
 </html>

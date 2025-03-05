@@ -24,6 +24,14 @@ p {
     color: white;
 }
 
+h1 {
+    color: white;
+    text-align: center;
+}
+
+h2 {
+    color: white;
+}
 
 /* Map Component */
 
@@ -98,7 +106,8 @@ p {
     height: auto;
 }
 
-.dynamic, .static {
+.dynamic,
+.static {
     display: grid;
     grid-template-rows: repeat(2, auto);
     height: 100%;
@@ -111,7 +120,8 @@ p {
     min-width: 400px;
 }
 
-.dynamic p, .static p {
+.dynamic p,
+.static p {
     padding: .5em 1em;
     text-align: justify;
 }
@@ -139,3 +149,5 @@ p {
 #year-info {
     color: white;
 }
+
+/* static and dynamic text */

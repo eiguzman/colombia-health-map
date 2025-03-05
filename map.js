@@ -21,7 +21,9 @@ export function drawMap(containerId, state) {
     state.paths = svg.selectAll("path")
         .data(state.data.features)
         .join("path")
+        .attr("class", "map-path")
         .attr("d", state.path)
+        .style("cursor", "pointer")
         .on("mouseover", (event, d) => {
             d3.select("#tooltip")
                 .style("opacity", 1)
@@ -33,8 +35,8 @@ export function drawMap(containerId, state) {
         })
         .on("mousemove", (event) => {
             d3.select("#tooltip")
-                .style("left", event.clientX + "px")
-                .style("top", event.clientY + "px");
+                .style("left", (event.pageX + 16) + "px")
+                .style("top", (event.pageY + 16) + "px");
         })
         .on("mouseout", () => {
             d3.select("#tooltip").style("opacity", 0);
