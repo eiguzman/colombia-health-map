@@ -1,5 +1,17 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
+// Fetch the static.json data
+d3.json('./lib/static.json').then(data => {
+        // Select the static class element
+        const staticContainer = d3.select('.static');
+
+        staticContainer.append('p').text(`${data[0].description}`);
+    })
+    .catch(error => {
+        console.error('Error loading the data:', error);
+    });
+
+
 // Load the data from the JSON file
 d3.json('./lib/dynamic.json').then(data => {
     const dynamicContainer = d3.select('.dynamic');
@@ -10,12 +22,6 @@ d3.json('./lib/dynamic.json').then(data => {
 
         // Filter the data for the selected year
         const selectedYearData = data.find(d => d.year === year);
-        const baseData = data.find(d => d.year === -1);
-
-        // Display text for the year -1
-        if (baseData) {
-            dynamicContainer.append('p').text(`\n${baseData.description}`);
-        }
 
         // Display text for the selected year
         if (selectedYearData) {

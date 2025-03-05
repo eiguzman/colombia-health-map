@@ -98,7 +98,7 @@ p {
     height: auto;
 }
 
-.dynamic {
+.dynamic, .static {
     display: grid;
     grid-template-rows: repeat(2, auto);
     height: 100%;
@@ -111,7 +111,7 @@ p {
     min-width: 400px;
 }
 
-.dynamic p {
+.dynamic p, .static p {
     padding: .5em 1em;
     text-align: justify;
 }
