@@ -30,6 +30,7 @@ body {
     align-items: center;
     background-color: rgba(0, 0, 0, .2);
     padding: 1em;
+    min-width: 400px;
 }
 
 #map-container p {
@@ -91,6 +92,19 @@ body {
 }
 
 .dynamic{
+    display: grid;
+    grid-template-rows: repeat(2, auto);
     height: 100%;
     width: 100%;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 1%;
+    background-color: rgba(0, 0, 0, .2);
+    padding: 1em;
+    min-width: 400px;
+}
+
+.dynamic p {
+    padding: .5em 1em;
+    text-align: justify;
 }

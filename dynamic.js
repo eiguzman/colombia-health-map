@@ -10,16 +10,16 @@ d3.json('./lib/dynamic.json').then(data => {
 
         // Filter the data for the selected year
         const selectedYearData = data.find(d => d.year === year);
-        const negativeOneData = data.find(d => d.year === -1);
+        const baseData = data.find(d => d.year === -1);
+
+        // Display text for the year -1
+        if (baseData) {
+            dynamicContainer.append('p').text(`\n${baseData.description}`);
+        }
 
         // Display text for the selected year
         if (selectedYearData) {
-            dynamicContainer.append('p').text(`${selectedYearData.description}\n`);
-        }
-
-        // Display text for the year -1
-        if (negativeOneData) {
-            dynamicContainer.append('p').text(`\n${negativeOneData.description}`);
+            dynamicContainer.append('p').text(`${selectedYearData.description}`);
         }
     };
 

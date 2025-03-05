@@ -79,5 +79,5 @@ export function updateBarChart(state) {
   yAxisGroup.transition().duration(750).call(yAxis);
 
   g.select(".bar-chart-title")
-    .text(`Top 10 by Dengue Incidence (${year})`);
+    .text(`Top 10 Municipalities by Dengue Incidence (${year})`);
 }
