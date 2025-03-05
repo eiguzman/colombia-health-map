@@ -21,8 +21,8 @@ export function drawBarChart(state) {
     .text("Top 10 by Dengue Incidence");
 
   state.barChart = {
-    svg,     
-    g,       
+    svg,
+    g,
     width,
     height,
     margin,
@@ -56,7 +56,7 @@ export function updateBarChart(state) {
   yScale.domain(top10.map(d => d.name));
 
   const bars = g.selectAll(".bar")
-    .data(top10, d => d.name);  
+    .data(top10, d => d.name);
 
   bars.enter()
     .append("rect")
@@ -68,7 +68,7 @@ export function updateBarChart(state) {
     .attr("x", 0)
     .attr("height", yScale.bandwidth())
     .attr("width", d => xScale(d.value))
-    .attr("fill", "#4682B4");
+    .attr("fill", d => state.colorScale(d.value));
 
   bars.exit().remove();
 

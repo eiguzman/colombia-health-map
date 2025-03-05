@@ -51,6 +51,8 @@ export function updateMap(state) {
         .domain([Math.log1p(1), Math.log1p(maxCases)])
         .interpolator(d => d3.interpolateReds((Math.log1p(d) - Math.log1p(1)) / (Math.log1p(maxCases) - Math.log1p(1))));
 
+    state.colorScale = colorScale;
+
     state.svg.selectAll("path")
         .transition()
         .duration(750)

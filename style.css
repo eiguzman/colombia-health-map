@@ -17,18 +17,23 @@ body {
     min-height: 100vh;
     margin: auto;
     padding: 1em;
-    background-color: rgba(0, 0, 0, .1);
+    background-color: rgb(28, 28, 28);
 }
+
+p {
+    color: white;
+}
+
 
 /* Map Component */
 
 #map-container {
-    border: 1px solid black;
+    /* border: 1px solid black; */
     display: flex;
     flex-flow: column;
     gap: 1em;
     align-items: center;
-    background-color: rgba(0, 0, 0, .2);
+    /* background-color: rgba(0, 0, 0, .2); */
     padding: 1em;
     min-width: 400px;
 }
@@ -47,6 +52,7 @@ body {
     justify-content: space-between;
     width: 100%;
     max-width: 400px;
+    color: white;
 }
 
 #map-slider {
@@ -63,8 +69,9 @@ body {
     appearance: none;
     width: 20px;
     height: 20px;
-    background: black;
+    background: white;
     border-radius: 50%;
+    border: solid 2px rgb(28, 28, 28);
     cursor: pointer;
 }
 
@@ -91,15 +98,15 @@ body {
     height: auto;
 }
 
-.dynamic{
+.dynamic {
     display: grid;
     grid-template-rows: repeat(2, auto);
     height: 100%;
     width: 100%;
-    border-style: solid;
-    border-width: 1px;
-    border-radius: 1%;
-    background-color: rgba(0, 0, 0, .2);
+    /* border-style: solid; */
+    /* border-width: 1px; */
+    /* border-radius: 1%; */
+    /* background-color: rgba(0, 0, 0, .2); */
     padding: 1em;
     min-width: 400px;
 }
@@ -107,4 +114,28 @@ body {
 .dynamic p {
     padding: .5em 1em;
     text-align: justify;
+}
+
+/* axis styling */
+
+.domain,
+.tick line {
+    stroke: white;
+}
+
+.tick text {
+    fill: white;
+}
+
+/* coloring bar title */
+/* TODO: REMOVE PLOT TITLE FROM BAR CHART AND JUST MAKE IT HTML*/
+
+.bar-chart-title {
+    fill: white;
+}
+
+/* text color for banffs part */
+
+#year-info {
+    color: white;
 }
