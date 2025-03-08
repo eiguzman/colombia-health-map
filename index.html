@@ -4,53 +4,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Styles Import -->
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   <title>Mapping Colombia</title>
 </head>
 
 <body>
+  <!-- Introduction / Hook Section -->
   <header>
+
     <h1>Visualizing Dengue in Colombia</h1>
-    <p>From 2007 to 2019, dengue incidence in Colombia was highest in the eastern regions, where warm temperatures and
+
+    <p>
+      From 2007 to 2019, dengue incidence in Colombia was highest in the eastern regions, where warm temperatures and
       tropical landscapes create ideal conditions for mosquito-borne transmission. In contrast, central municipalities,
       including Bogotá, consistently reported lower incidence rates, influenced by factors such as altitude, cooler
       climates, and better infrastructure. This project maps dengue trends over time, highlighting how geography and
-      socio-economic factors shape the spread of the disease.</p>
+      socio-economic factors shape the spread of the disease.
+    </p>
+
   </header>
+  <!-- Explorable Section -->
   <main>
 
+    <!-- Map Section -->
     <div id="left-column">
       <svg id="map"></svg>
       <div id="tooltip"></div>
+      <p>Incidence Rate per 100,000 People</p>
       <div id="legend"></div>
     </div>
 
+    <!-- Story and Bar Plot Section -->
     <div id="right-column">
-
+      <p>Top 10 Most Affected Area</p>
       <div id="bar-chart-container">
         <svg id="bar-chart"></svg>
       </div>
-
-      <div class="dynamic">
-      </div>
-
-      <div id="year-info">
-      </div>
-
+      <div class="dynamic"></div>
+      <div id="year-info"></div>
       <div id="slider-label">
         <span>Year</span>
         <span id="year-label">2019</span>
       </div>
-      <!-- map-slider -->
       <input type="range" name="slider-input" id="slider-input" min="2007" max="2019" value="2019" step="1">
-
     </div>
+
   </main>
 
-  <!-- SCRIPTS -->
+  <!-- Single Script Import After D3 -->
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   <script type="module" src="main.js"></script>
-  <script type="module" src="dynamic.js"></script>
 </body>
 
 </html>

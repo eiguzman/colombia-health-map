@@ -1,4 +1,5 @@
 export function drawBarChart(state) {
+  // setting up the bar plot container and dimentions
   const container = document.getElementById("bar-chart-container");
   const width = container.clientWidth;
   const aspectRatio = 3 / 4;
@@ -10,9 +11,11 @@ export function drawBarChart(state) {
     .attr("viewBox", `0 0 ${width} ${height}`)
     .attr("preserveAspectRatio", "none");
 
+  // changing the orientation of the bars
   const bars = svg.append("g")
     .attr("transform", "translate(180,40)");
 
+  // creating and sharing the bar chart components
   state.barChart = {
     svg,
     bars,
@@ -22,29 +25,36 @@ export function drawBarChart(state) {
     yAxisGroup: bars.append("g").attr("class", "y-axis")
   };
 
+  // update the initial bar plot setup with current global state
   updateBarChart(state);
 }
 
-
 export function updateBarChart(state) {
+  // grab and define some global state details
   const { bars, xScale, yScale, xAxisGroup, yAxisGroup } = state.barChart;
   const year = state.year;
 
+  // get the data
   const data = state.data.features.map(d => ({
     name: d.properties.name,
     value: d.properties[`incident_${year}`] || 0
   }));
 
+  // sort and slice the top 10
   data.sort((a, b) => d3.descending(a.value, b.value));
   const top10 = data.slice(0, 10);
 
+  // update x and y scales
   xScale.domain([0, d3.max(top10, d => d.value)]);
   yScale.domain(top10.map(d => d.name));
 
+  // link data to bars
   const barsSelection = bars.selectAll(".bar")
     .data(top10, d => d.name);
 
+  // build the bars
   barsSelection.join(
+    // this is for when new bars appear
     enter => enter
       .append("rect")
       .attr("class", "bar")
@@ -92,14 +102,16 @@ export function updateBarChart(state) {
             .attr("stroke-width", null);
         }
       })
+      // animate the bars
       .call(enter => enter.transition()
         .duration(750)
         .ease(d3.easeCubicOut)
         .attr("width", d => xScale(d.value))
       ),
-
+    // this when bars need to be updated (like position)
     update => update
-      .interrupt()
+      .interrupt() // needed to avoid a bug
+      // animate bar movement
       .call(update => update.transition()
         .duration(750)
         .ease(d3.easeCubicOut)
@@ -107,21 +119,18 @@ export function updateBarChart(state) {
         .attr("width", d => xScale(d.value))
         .attr("fill", d => state.mapChart.colorScale(d.value))
       ),
-
-    exit => exit
-      .interrupt()
-      .call(exit => exit.transition()
-        .duration(500)
-        .attr("width", 0)
-        .remove()
-      )
+    // this when a bar is removed (keep it like this because it avoid another bug)
+    exit => exit.remove()
   );
 
+  // link data with labels
   const labels = bars
     .selectAll(".bar-label")
     .data(top10, d => d.name);
 
+  // build the labels
   labels.join(
+    // once again, this is for when labels are newly created
     enter => enter
       .append("text")
       .attr("class", "bar-label")
@@ -132,16 +141,18 @@ export function updateBarChart(state) {
       .attr("text-anchor", "end")
       .style("opacity", 0)
       .text(d => d3.format(",.0f")(d.value))
+      // animate the new labels
       .call(enter => enter.transition()
         .duration(750)
         .ease(d3.easeCubicOut)
         .attr("x", d => xScale(d.value) - 5)
         .style("opacity", 1)
       ),
-
+    // this is when the labels updated (like their rank and thus position)
     update => update
-      .interrupt()
+      .interrupt() // keep to avoid a race condition bug
       .text(d => d3.format(",.0f")(d.value))
+      // animate existing labels
       .call(update => update.transition()
         .duration(750)
         .ease(d3.easeCubicOut)
@@ -149,11 +160,11 @@ export function updateBarChart(state) {
         .attr("y", d => yScale(d.name) + yScale.bandwidth() / 2 + 4)
         .style("opacity", 1)
       ),
-
+    // this is when labels are removed (keep it like this to avoid bugs)
     exit => exit.remove()
   );
 
-
+  // animate and update axis'
   xAxisGroup
     .transition()
     .duration(750)
