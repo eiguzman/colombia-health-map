@@ -13,7 +13,7 @@ body {
     font: 100%/1.5 sans-serif, system-ui;
     display: flex;
     flex-flow: column;
-    max-width: 80ch;
+    max-width: 1200px;
     min-height: 100vh;
     margin: auto;
     padding: 1em;
@@ -33,27 +33,45 @@ h2 {
     color: white;
 }
 
-/* Map Component */
+/* Layout */
 
-#map-container {
+main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1em;
+}
+
+#left-column {
     display: flex;
     flex-flow: column;
-    gap: 1em;
     align-items: center;
-    padding: 1em;
-    min-width: 400px;
 }
 
-#map-container p {
-    text-align: center;
+#right-column {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    gap: 1em;
 }
 
-#map {
+/* Introduction / Hook Section */
+
+header {
     width: 100%;
-    height: fit-content;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    gap: 1em;
+    margin-bottom: 2em;
 }
 
-#map-label {
+header p {
+    max-width: 80ch;
+}
+
+/* Slider */
+
+#slider-label {
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -61,7 +79,7 @@ h2 {
     color: white;
 }
 
-#map-slider {
+#slider-input {
     appearance: none;
     width: 100%;
     max-width: 400px;
@@ -71,7 +89,7 @@ h2 {
     margin-bottom: 1em;
 }
 
-#map-slider::-webkit-slider-thumb {
+#slider-input::-webkit-slider-thumb {
     appearance: none;
     width: 20px;
     height: 20px;
@@ -81,6 +99,15 @@ h2 {
     cursor: pointer;
 }
 
+/* Map */
+
+#map {
+    width: 100%;
+    height: fit-content;
+}
+
+/* Tooltip */
+
 #tooltip {
     position: absolute;
     background: white;
@@ -89,6 +116,8 @@ h2 {
     pointer-events: none;
     opacity: 0;
 }
+
+/* Legend */
 
 #legend {
     width: 100%;
@@ -104,7 +133,16 @@ h2 {
     height: auto;
 }
 
-/* axis styling */
+/* Bar */
+
+#bar-chart-container {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+}
+
+
+/* Axis' */
 
 .domain,
 .tick line {
@@ -115,26 +153,21 @@ h2 {
     fill: white;
 }
 
+/* Static and Dynamic */
+
+.dynamic {
+    background-color: rgba(0, 0, 0, 0.25);
+    border-radius: 2px;
+    border: solid black 1px;
+}
+
+.dynamic p {
+    padding: .5em 1em;
+    text-align: justify;
+}
+
 /* text color for banffs part */
 
 #year-info {
     color: white;
-}
-
-/* static and dynamic text */
-
-.dynamic,
-.static {
-    display: grid;
-    grid-template-rows: repeat(2, auto);
-    height: 100%;
-    width: 100%;
-    padding: 1em;
-    min-width: 400px;
-}
-
-.dynamic p,
-.static p {
-    padding: .5em 1em;
-    text-align: justify;
 }

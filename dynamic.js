@@ -1,12 +1,10 @@
-// import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
-
 // Fetch the static.json data
 d3.json('./lib/static.json').then(data => {
-        // Select the static class element
-        const staticContainer = d3.select('.static');
+    // Select the static class element
+    const staticContainer = d3.select('.static');
 
-        staticContainer.append('p').text(`${data[0].description}`);
-    })
+    staticContainer.append('p').text(`${data[0].description}`);
+})
     .catch(error => {
         console.error('Error loading the data:', error);
     });
@@ -18,7 +16,7 @@ d3.json('./lib/dynamic.json').then(data => {
 
     // Function to update the text based on the selected year
     const updateText = (year) => {
-        dynamicContainer.selectAll('*').remove(); // Clear previous text
+        dynamicContainer.selectAll(':not(#year-info)').remove();
 
         // Filter the data for the selected year
         const selectedYearData = data.find(d => d.year === year);
@@ -33,7 +31,7 @@ d3.json('./lib/dynamic.json').then(data => {
     updateText(2019); // Default to the slider's initial value
 
     // Listen for changes on the slider
-    d3.select('#map-slider').on('input', function() {
+    d3.select('#slider-input').on('input', function () {
         const selectedYear = +this.value; // Get the selected year from the slider
         updateText(selectedYear);
     });

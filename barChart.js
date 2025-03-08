@@ -1,26 +1,30 @@
 export function drawBarChart(state) {
-  const margin = { top: 40, right: 20, bottom: 40, left: 180 };
-  const width = 600 - margin.left - margin.right;
-  const height = 400 - margin.top - margin.bottom;
+  const container = document.getElementById("bar-chart-container");
+  const width = container.clientWidth;
+  const aspectRatio = 3 / 4;
+  const height = width * aspectRatio;
 
   const svg = d3.select("#bar-chart")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom);
+    .attr("width", "100%")
+    .attr("height", "100%")
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .attr("preserveAspectRatio", "none");
 
   const bars = svg.append("g")
-    .attr("transform", `translate(${margin.left}, ${margin.top})`);
+    .attr("transform", "translate(180,40)");
 
   state.barChart = {
     svg,
     bars,
-    xScale: d3.scaleLinear().range([0, width]),
-    yScale: d3.scaleBand().range([0, height]).padding(0.1),
-    xAxisGroup: bars.append("g").attr("class", "x-axis").attr("transform", `translate(0, ${height})`),
+    xScale: d3.scaleLinear().range([0, width - 200]),
+    yScale: d3.scaleBand().range([0, height - 80]).padding(0.1),
+    xAxisGroup: bars.append("g").attr("class", "x-axis").attr("transform", `translate(0,${height - 80})`),
     yAxisGroup: bars.append("g").attr("class", "y-axis")
   };
 
   updateBarChart(state);
 }
+
 
 export function updateBarChart(state) {
   const { bars, xScale, yScale, xAxisGroup, yAxisGroup } = state.barChart;

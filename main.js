@@ -13,7 +13,7 @@ let state = {
 initApp();
 
 function setupSlider() {
-  let slider = d3.select("#map-slider");
+  let slider = d3.select("#slider-input");
   let label = d3.select("#year-label");
 
   slider.on("input", function () {
