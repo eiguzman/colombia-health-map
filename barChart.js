@@ -54,17 +54,43 @@ export function updateBarChart(state) {
       .attr("width", 0)
       .attr("fill", d => state.mapChart.colorScale(d.value))
       .on("mouseover", (event, d) => {
-        d3.selectAll(".map-path")
-          .filter(p => p.properties.name === d.name)
-          .attr("stroke", "black")
-          .attr("stroke-width", 2);
-        d3.select(event.target).style("cursor", "pointer");
+        // detemines the correct municipality and strokes it
+        const matchingMunicipalities = state.data.features.filter(
+          p => p.properties.name === d.name
+        );
+
+        const topMunicipality = matchingMunicipalities.reduce((max, p) => {
+          const incidentRate = p.properties[`incident_${state.year}`] || 0;
+          return incidentRate > (max?.properties[`incident_${state.year}`] || 0) ? p : max;
+        }, null);
+
+        if (topMunicipality) {
+          d3.selectAll(".map-path")
+            .filter(p => p === topMunicipality)
+            .attr("stroke", "black")
+            .attr("stroke-width", 2);
+        }
+
+        d3.select(event.target)
+          .style("cursor", "pointer");
       })
       .on("mouseout", (event, d) => {
-        d3.selectAll(".map-path")
-          .filter(p => p.properties.name === d.name)
-          .attr("stroke", null)
-          .attr("stroke-width", null);
+        // detemines the correct municipality and unstrokes it
+        const matchingMunicipalities = state.data.features.filter(
+          p => p.properties.name === d.name
+        );
+
+        const topMunicipality = matchingMunicipalities.reduce((max, p) => {
+          const incidentRate = p.properties[`incident_${state.year}`] || 0;
+          return incidentRate > (max?.properties[`incident_${state.year}`] || 0) ? p : max;
+        }, null);
+
+        if (topMunicipality) {
+          d3.selectAll(".map-path")
+            .filter(p => p === topMunicipality)
+            .attr("stroke", null)
+            .attr("stroke-width", null);
+        }
       })
       .call(enter => enter.transition()
         .duration(750)
