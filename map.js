@@ -107,7 +107,9 @@ export function createMap(state) {
             .attr("y", 10)
             .attr("width", legendWidth)
             .attr("height", legendHeight)
-            .style("fill", "url(#legend-gradient)");
+            .style("fill", "url(#legend-gradient)")
+            .style("stroke", "white")
+            .style("stroke-width", "1px");
 
         const axis = d3.axisBottom(legendScale)
             .ticks(5, d3.format(".0f"))
@@ -118,7 +120,11 @@ export function createMap(state) {
             .call(axis)
             .select(".domain")
             .remove();
+
+        svg.selectAll("text")
+            .style("font-size", "14px");
     }
+
 
     init();
     state.mapChart = mapObj;
