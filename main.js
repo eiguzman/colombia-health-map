@@ -4,7 +4,8 @@ import { drawBarChart, updateBarChart } from "./barChart.js";
 
 const state = {
   data: null,
-  year: 2019
+  year: 2019,
+  globalMaxCases: 0,
 };
 
 async function loadData() {
@@ -14,7 +15,10 @@ async function loadData() {
   state.data.features.forEach(d => {
     Object.keys(d.properties).forEach(key => {
       if (key.startsWith("incident_")) {
-        state.globalMaxCases = Math.max(state.globalMaxCases, d.properties[key] || 0);
+        state.globalMaxCases = Math.max(
+          state.globalMaxCases,
+          d.properties[key] || 0
+        );
       }
     });
   });

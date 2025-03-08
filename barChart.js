@@ -1,4 +1,4 @@
-import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+// import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
 export function drawBarChart(state) {
   const margin = { top: 40, right: 20, bottom: 40, left: 150 };
@@ -113,5 +113,5 @@ export function updateBarChart(state) {
   yAxisGroup.transition().duration(750).call(yAxis);
 
   g.select(".bar-chart-title")
-    .text(`Top 10 Municipalities by Dengue Incidence (${year})`);
+    .text(`Top 10 Municipalities by Dengue Incidence (${state.year})`);
 }

@@ -5,12 +5,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   <title>Mapping Colombia</title>
 </head>
 
 <body>
   <h1>Visualizing Dengue in Colombia</h1>
-  <p>From 2007 to 2019, dengue incidence in Colombia was highest in the eastern regions, where warm temperatures and tropical landscapes create ideal conditions for mosquito-borne transmission. In contrast, central municipalities, including Bogotá, consistently reported lower incidence rates, influenced by factors such as altitude, cooler climates, and better infrastructure. This project maps dengue trends over time, highlighting how geography and socio-economic factors shape the spread of the disease.</p>
+  <p>From 2007 to 2019, dengue incidence in Colombia was highest in the eastern regions, where warm temperatures and
+    tropical landscapes create ideal conditions for mosquito-borne transmission. In contrast, central municipalities,
+    including Bogotá, consistently reported lower incidence rates, influenced by factors such as altitude, cooler
+    climates, and better infrastructure. This project maps dengue trends over time, highlighting how geography and
+    socio-economic factors shape the spread of the disease.</p>
   <!-- <div class="static">
   </div> -->
   <!-- MAP COMPONENT -->
@@ -20,7 +25,8 @@
     <svg id="map"></svg>
     <div id="tooltip"></div>
     <div id="map-label">
-      <span>Year</span><span>2019</span>
+      <span>Year</span>
+      <span>2019</span>
     </div>
     <input type="range" name="map-slider" id="map-slider" min="2007" max="2019" value="2019" step="1">
   </div>
@@ -34,11 +40,10 @@
   </div>
 
   <!-- TEMPORARILY COMMENTED OUT -->
-  <!-- <div id="year-info">
-  </div> -->
+  <div id="year-info">
+  </div>
 
   <!-- SCRIPTS -->
-  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   <script type="module" src="main.js"></script>
   <script type="module" src="dynamic.js"></script>
 </body>
