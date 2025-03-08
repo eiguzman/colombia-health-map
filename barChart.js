@@ -1,5 +1,3 @@
-// import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
-
 export function drawBarChart(state) {
   const margin = { top: 40, right: 20, bottom: 40, left: 150 };
   const width = 600 - margin.left - margin.right;
@@ -68,7 +66,7 @@ export function updateBarChart(state) {
     .attr("x", 0)
     .attr("height", yScale.bandwidth())
     .attr("width", d => xScale(d.value))
-    .attr("fill", d => state.colorScale(d.value))
+    .attr("fill", d => state.mapChart.colorScale(d.value))
     .selection()
     .on("mouseover", (event, d) => {
       d3.selectAll(".map-path")

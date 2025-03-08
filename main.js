@@ -1,4 +1,4 @@
-import { drawMap, updateMap, drawLegend } from "./map.js";
+import { createMap } from "./map.js";
 import { updateText } from "./text.js";
 import { drawBarChart, updateBarChart } from "./barChart.js";
 
@@ -6,11 +6,13 @@ let state = {
   data: null,
   year: 2019,
   globalMaxCases: 0,
+  mapChart: null,
+  updateMap: null
 };
 
 initApp();
 
-function Slider() {
+function setupSlider() {
   let slider = d3.select("#map-slider");
   let label = d3.select("#year-label");
 
@@ -18,9 +20,12 @@ function Slider() {
     state.year = +this.value;
     label.text(state.year);
 
-    updateMap(state);
+    state.updateMap(state);
     updateText(state.year);
     updateBarChart(state);
+
+    // debug for global state
+    console.log(state);
   });
 }
 
@@ -34,12 +39,7 @@ async function initApp() {
   ));
 
   // initalize compoenents
-  Slider();
-  drawMap("#map", state);
-  drawLegend(state);
+  setupSlider();
+  state.updateMap = createMap(state);
   drawBarChart(state);
-
-  d3.select("#tooltip")
-    .style("position", "absolute")
-    .style("opacity", 0);
 }
