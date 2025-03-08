@@ -2,59 +2,44 @@ import { drawMap, updateMap, drawLegend } from "./map.js";
 import { updateText } from "./text.js";
 import { drawBarChart, updateBarChart } from "./barChart.js";
 
-const state = {
+let state = {
   data: null,
   year: 2019,
   globalMaxCases: 0,
 };
 
-async function loadData() {
-  state.data = await d3.json("data/incident.geojson");
+initApp();
 
-  state.globalMaxCases = 0;
-  state.data.features.forEach(d => {
-    Object.keys(d.properties).forEach(key => {
-      if (key.startsWith("incident_")) {
-        state.globalMaxCases = Math.max(
-          state.globalMaxCases,
-          d.properties[key] || 0
-        );
-      }
-    });
-  });
-}
+function Slider() {
+  let slider = d3.select("#map-slider");
+  let label = d3.select("#year-label");
 
-function setupSlider() {
-  const slider = document.getElementById("map-slider");
-  const label = document.getElementById("map-label").children[1];
-
-  slider.addEventListener("input", (event) => {
-    state.year = +event.target.value;
-    label.textContent = state.year;
+  slider.on("input", function () {
+    state.year = +this.value;
+    label.text(state.year);
 
     updateMap(state);
     updateText(state.year);
-
     updateBarChart(state);
   });
-
-  updateText(state.year);
 }
 
 async function initApp() {
-  await loadData();
-  if (state.data) {
-    drawMap("#map", state);
-    drawLegend(state);
+  // configure state
+  state.data = await d3.json("data/incident.geojson");
+  state.globalMaxCases = d3.max(state.data.features, d => d3.max(
+    Object.keys(d.properties)
+      .filter(key => key.startsWith("incident_"))
+      .map(key => d.properties[key] || 0)
+  ));
 
-    drawBarChart(state);
+  // initalize compoenents
+  Slider();
+  drawMap("#map", state);
+  drawLegend(state);
+  drawBarChart(state);
 
-    setupSlider();
-
-    d3.select("#tooltip")
-      .style("position", "absolute")
-      .style("opacity", 0);
-  }
+  d3.select("#tooltip")
+    .style("position", "absolute")
+    .style("opacity", 0);
 }
-
-initApp();
