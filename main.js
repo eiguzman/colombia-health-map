@@ -1,6 +1,7 @@
 import { createMap } from "./map.js";
 import { updateStory } from "./story.js";
 import { drawBarChart, updateBarChart } from "./barChart.js";
+import { createProgressBar } from "./progressBar.js";
 
 // global state to share components
 let state = {
@@ -33,6 +34,7 @@ async function initApp() {
   ));
 
   // initialize / draw compoenents
+  state.updateProgressBar = createProgressBar(state);
   setupScroll();
   state.updateMap = createMap(state);
   drawBarChart(state);
@@ -46,10 +48,16 @@ function setupScroll() {
   d3.select("main").on("wheel", (event) => {
     // stops defualt page behavior from scrolling
     event.preventDefault();
+
     // grabs the change in scroll position
     let delta = event.deltaY;
+
     // updates virtual scroll position
     state.virtualScroll = Math.min(Math.max(state.virtualScroll + delta, 0), maxScroll);
+
+    // update progress bar with current virtual scroll
+    state.updateProgressBar(state);
+
     // maps virtual scroll position to a year
     let newYear = Math.round(2007 + (state.virtualScroll / maxScroll) * (2019 - 2007));
 
