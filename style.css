@@ -19,7 +19,8 @@ body {
     padding: 1em;
     background-color: rgb(28, 28, 28);
     /* for the virtual scrolling */
-    overflow: hidden;
+    /* overflow: hidden; */
+    overflow-y: auto;
 }
 
 p {
@@ -42,7 +43,7 @@ main {
     grid-template-columns: 1fr 1fr;
     gap: 1em;
     /* for the virtual scrolling */
-    overflow: hidden;
+    position: relative;
 }
 
 #left-column {
@@ -60,7 +61,8 @@ main {
 
 /* Introduction / Hook Section */
 
-header {
+header,
+.conclusion {
     width: 100%;
     display: flex;
     flex-flow: column;
@@ -69,7 +71,8 @@ header {
     margin-bottom: 2em;
 }
 
-header p {
+header p,
+.conclusion p {
     max-width: 80ch;
 }
 
