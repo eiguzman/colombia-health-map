@@ -17,23 +17,23 @@
     },
     {
         "year": 2011,
-        "description": "2011 sees significantly less cases than last year, marking this as an endemic year. Only 6 municipalities crossed the 1000 cases mark. Florencia sees the greatest number of cases at roughly 4800 cases. This is also the last year Florencia is in the top 10 municipalities with the highest incidence rates."
+        "description": "2011 sees significantly less cases than last year, marking this as an endemic year. Only 6 municipalities crossed the 1000 cases mark. Florencia still sees the greatest number of cases at roughly 4800 cases. This is also the last year Florencia is in the top 10 municipalities with the highest incidence rates. Reasons may include, but are not limited to, the implementation of new health policies, changes in climate (less humid, less rain for these mosquitoes to survive), or changes in the population of the area."
     },
     {
         "year": 2012,
-        "description": "2012 sees similar incidence rates than the previous year, although no municipality sees rates higher than 1800. This is the second endemic year after the high rates of 2010. The top 10 municipalities are all greater than 1000 cases. This is also the second year we see Nilo top the incidence rates."
+        "description": "2012 sees similar incidence rates than the previous year, although no municipality sees rates higher than 1800. This is the second endemic year after the high rates of 2010. The top 10 municipalities are all greater than 1000 cases, yet all of them are less than 1800 cases. This can be seen as a positive trend in the fight against dengue, as the worst thing that can happen is for the number of cases to increase or spike every year, no matter the municipality."
     },
     {
         "year": 2013,
-        "description": "2013 sees higher incidence rates than the previous year. Although only one municipality, Nilo, spiked higher than 5000 incidents, many municipalities in the north, east, and south show rates between 1000 to 1500 incidents. This is the second year Nilo has been an active hotspot for dengue."
+        "description": "2013 sees higher incidence rates than the previous year. Although only one municipality, Nilo, spiked higher than 5000 incidents, many municipalities in the north, east, and south show rates between 1000 to 1500 incidents. The general trend for the rest of the the top 10 also seemed to have increased as well, meaning the Dengue virus was spreading to more areas."
     },
     {
         "year": 2014,
-        "description": "2014 can be classified as an epidemic year. In comparison to last year's stats, the top 10 municipalities with the highest incidence rates were over 1500 cases. This is the third consecutive year of Nilo as a hotspot for cases, and the second as the municipality with the highest rate, although the number is lower than the previous year."
+        "description": "2014 was a more mild version of 2013, with cases still relatively high, but only marginally less than the previous year. In comparison to last year's stats, the top 10 municipalities with the highest incidence rates were over 1500 cases. This is the second consecutive year of Nilo as a hotspot for cases, and the second as the municipality with the highest rate, although the number is lower than the previous year."
     },
     {
         "year": 2015,
-        "description": "2015 sees similar incidence rates than the previous year, with slightly higher numbers. This is the first year when Nilo drops less than 1500 cases, as well as from the top 10 municipalities with the highest incidence rates."
+        "description": "2015 sees similar incidence rates than the previous year, with slightly higher numbers. This is the first year when Nilo drops less than 1500 cases, as well as from the top 10 municipalities with the highest incidence rates. Although Nilo dropped, the number of cases in other municipalities increased, with the top 10 municipalities all having incidence rates higher than 1500 cases like the previous year. This may tell us and readers that even though the Dengue virus may be decreasing in one area, it is still actively spreading to other areas."
     },
     {
         "year": 2016,
@@ -49,6 +49,6 @@
     },
     {
         "year": 2019,
-        "description": "2019, the last year of data available, can also be classified as an epidemic year. Northern municipalities see a sharp uptick in cases along with the usual high incidence rates of the eastern savanna region. Of the 10 municipalities with the highest case, Leticia is the only hotspot in the amazon region, likely sharing high cases with Brazil and Peru."
+        "description": "2019, the last year of data available, can also be classified as an epidemic year. Northern municipalities see a sharp uptick in cases along with the usual high incidence rates of the eastern savanna region. Of the 10 municipalities with the highest case, Leticia is the only hotspot in the amazon region, likely sharing high cases with Brazil and Peru. Another very important pattern to note is that throughout the years, municipalities near the west of Pacific Coast of Columbia have consistently low incidence rates, as seen by our heatmap. This is because the West pacific coast receives up to 7000 mm of rain each year making it the wettest region in Columbia. This type of climate makes it relatviely harder for Aedes aegypti mosquitoes to survive and breed, as they prefer hot and tropical climates."
     }
 ]
