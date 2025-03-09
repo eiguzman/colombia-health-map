@@ -18,6 +18,8 @@ body {
     margin: auto;
     padding: 1em;
     background-color: rgb(28, 28, 28);
+    /* for the virtual scrolling */
+    overflow: hidden;
 }
 
 p {
@@ -39,6 +41,8 @@ main {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1em;
+    /* for the virtual scrolling */
+    overflow: hidden;
 }
 
 #left-column {
@@ -67,36 +71,6 @@ header {
 
 header p {
     max-width: 80ch;
-}
-
-/* Slider */
-
-#slider-label {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 400px;
-    color: white;
-}
-
-#slider-input {
-    appearance: none;
-    width: 100%;
-    max-width: 400px;
-    height: 10px;
-    background: darkgray;
-    border-radius: 5px;
-    margin-bottom: 1em;
-}
-
-#slider-input::-webkit-slider-thumb {
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    background: white;
-    border-radius: 50%;
-    border: solid 2px rgb(28, 28, 28);
-    cursor: pointer;
 }
 
 /* Map */

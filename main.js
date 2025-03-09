@@ -6,10 +6,11 @@ import { drawBarChart, updateBarChart } from "./barChart.js";
 let state = {
   data: null,
   story: null,
-  year: 2019,
+  year: 2007,
   globalMaxCases: 0,
   mapChart: null,
-  updateMap: null
+  updateMap: null,
+  virtualScroll: 0
 };
 
 // entry point for app
@@ -31,32 +32,39 @@ async function initApp() {
       .map(key => d.properties[key] || 0)
   ));
 
-  // initialize / intital draw of compoenents
-  setupSlider();
+  // initialize / draw compoenents
+  setupScroll();
   state.updateMap = createMap(state);
   drawBarChart(state);
   updateStory(state.year, state.story);
 }
 
-// slider controller
-function setupSlider() {
-  let slider = d3.select("#slider-input");
-  let label = d3.select("#year-label");
+function setupScroll() {
+  // set scroll range
+  let maxScroll = window.innerHeight * 5;
 
-  // when the slider changes
-  slider.on("input", function () {
-    // update the global state
-    state.year = +this.value;
-    label.text(state.year);
+  d3.select("main").on("wheel", (event) => {
+    // stops defualt page behavior from scrolling
+    event.preventDefault();
+    // grabs the change in scroll position
+    let delta = event.deltaY;
+    // updates virtual scroll position
+    state.virtualScroll = Math.min(Math.max(state.virtualScroll + delta, 0), maxScroll);
+    // maps virtual scroll position to a year
+    let newYear = Math.round(2007 + (state.virtualScroll / maxScroll) * (2019 - 2007));
 
-    // and run updates on these components
-    state.updateMap(state);
-    updateStory(state.year, state.story);
-    updateBarChart(state);
+    // once year position for scroll is new
+    if (newYear !== state.year) {
+      state.year = newYear;
 
-    // debug to current global state
-    console.log(state);
-  });
+      // update components
+      state.updateMap(state);
+      updateStory(state.year, state.story);
+      updateBarChart(state);
+    }
+
+    // allows for preventDefault to be used
+  }, { passive: false });
 }
 
 // begin the app
