@@ -11,17 +11,17 @@ export function drawBarChart(state) {
     .attr("viewBox", `0 0 ${width} ${height}`)
     .attr("preserveAspectRatio", "none");
 
-  // changing the orientation of the bars
+  // changing the margins a bit
   const bars = svg.append("g")
-    .attr("transform", "translate(180,40)");
+    .attr("transform", "translate(180,0)");
 
   // creating and sharing the bar chart components
   state.barChart = {
     svg,
     bars,
     xScale: d3.scaleLinear().range([0, width - 200]),
-    yScale: d3.scaleBand().range([0, height - 80]).padding(0.1),
-    xAxisGroup: bars.append("g").attr("class", "x-axis").attr("transform", `translate(0,${height - 80})`),
+    yScale: d3.scaleBand().range([0, height - 20]).padding(0.1),
+    xAxisGroup: bars.append("g").attr("class", "x-axis").attr("transform", `translate(0,${height - 20})`),
     yAxisGroup: bars.append("g").attr("class", "y-axis")
   };
 

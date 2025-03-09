@@ -1,6 +1,6 @@
 export function updateStory(year, story) {
     // grab the container for the story
-    const container = d3.select('.dynamic');
+    const container = d3.select('.story');
 
     // clear it out
     container.selectAll('*').remove();

@@ -129,19 +129,13 @@ header p {
 
 /* Static and Dynamic */
 
-.dynamic {
+.story {
     background-color: rgba(0, 0, 0, 0.25);
     border-radius: 2px;
     border: solid black 1px;
 }
 
-.dynamic p {
+.story p {
     padding: .5em 1em;
     text-align: justify;
-}
-
-/* text color for banffs part */
-
-#year-info {
-    color: white;
 }
