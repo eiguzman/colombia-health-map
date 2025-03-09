@@ -13,6 +13,7 @@ body {
     font: 100%/1.5 sans-serif, system-ui;
     display: flex;
     flex-flow: column;
+    gap: 1em;
     max-width: 1200px;
     min-height: 100vh;
     margin: auto;
@@ -44,6 +45,11 @@ main {
     gap: 1em;
     /* for the virtual scrolling */
     position: relative;
+
+    background-color: rgba(0, 0, 0, 0.25);
+    border-radius: 2px;
+    border: solid black 1px;
+    padding: 1em;
 }
 
 #left-column {
@@ -132,11 +138,11 @@ header p,
 
 /* Static and Dynamic */
 
-.story {
+/* .story {
     background-color: rgba(0, 0, 0, 0.25);
     border-radius: 2px;
     border: solid black 1px;
-}
+} */
 
 .story p {
     padding: .5em 1em;
