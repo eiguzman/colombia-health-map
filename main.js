@@ -63,6 +63,11 @@ function setupScroll() {
 
     // once year position for scroll is new
     if (newYear !== state.year) {
+      // cheap fix of stroking bug on scroll
+      d3.selectAll(".map-path")
+        .attr("stroke", null)
+        .attr("stroke-width", null);
+
       state.year = newYear;
 
       // update components
