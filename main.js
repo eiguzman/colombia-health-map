@@ -2,6 +2,7 @@ import { createMap } from "./map.js";
 import { updateStory } from "./story.js";
 import { drawBarChart, updateBarChart } from "./barChart.js";
 import { createProgressBar } from "./progressBar.js";
+import { showTooltip } from "./tooltip.js";
 
 // global state to share components
 let state = {
@@ -74,11 +75,24 @@ function setupScroll() {
       state.updateMap(state);
       updateStory(state.year, state.story);
       updateBarChart(state);
+
+      // cheap fix to keep update tooltip on scroll
+      const hoveredElement = d3.select(".map-path:hover");
+      if (!hoveredElement.empty()) {
+        const d = hoveredElement.datum();
+        showTooltip(lastMousePosition, d, state.year);
+      }
     }
 
     // allows for preventDefault to be used
   }, { passive: false });
 }
+
+let lastMousePosition = { pageX: 0, pageY: 0 };
+
+document.addEventListener("mousemove", (event) => {
+  lastMousePosition = { pageX: event.pageX, pageY: event.pageY };
+});
 
 // begin the app
 initApp();
