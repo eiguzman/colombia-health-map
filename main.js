@@ -39,25 +39,41 @@ async function initApp() {
 }
 
 function setupSlider() {
-  const slider = document.getElementById("slider");
+  const slider = d3.select("#slider");
+  const sliderValue = d3.select("#slider-value");
 
-  slider.addEventListener("input", (event) => {
-    const newYear = parseInt(event.target.value, 10);
+  function updateSliderLabel() {
+    const minYear = +slider.attr("min");
+    const maxYear = +slider.attr("max");
+    const value = +slider.property("value");
+
+    const percent = (value - minYear) / (maxYear - minYear);
+    const sliderWidth = slider.node().offsetWidth;
+    const offset = percent * sliderWidth;
+
+    sliderValue
+      .style("left", `${offset}px`)
+      .text(value);
+  }
+
+  slider.on("input", function () {
+    const newYear = +this.value;
 
     if (newYear !== state.year) {
       state.year = newYear;
-
-      // cheap fix of stroking bug
-      d3.selectAll(".map-path")
-        .attr("stroke", null)
-        .attr("stroke-width", null);
 
       state.updateMap(state);
       updateStory(state.year, state.story);
       updateBarChart(state);
     }
+
+    updateSliderLabel();
   });
+
+  // Initialize label position
+  updateSliderLabel();
 }
+
 
 // begin the app
 initApp();

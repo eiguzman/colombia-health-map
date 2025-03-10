@@ -165,11 +165,16 @@ header p,
     appearance: none;
     width: 16px;
     height: 16px;
-    background: rgb(255, 72, 35);
+    background: rgb(255, 70, 8);
     border-radius: 50%;
     border: solid rgb(28, 28, 28) 1px;
     cursor: pointer;
     position: relative;
+    transition: transform 0.1s ease-in-out;
+}
+
+#slider:active::-webkit-slider-thumb {
+    transform: scale(1.2);
 }
 
 #slider::-moz-range-thumb {
@@ -185,10 +190,10 @@ header p,
     top: -40px;
     left: 50%;
     transform: translateX(-50%);
-    background: white;
-    color: black;
+    background: rgb(255, 72, 35);
+    color: white;
     padding: 3px 6px;
-    border-radius: 5px;
+    border-radius: 2px;
     font-size: 0.9em;
     white-space: nowrap;
 }
