@@ -1,8 +1,6 @@
 import { createMap } from "./map.js";
 import { updateStory } from "./story.js";
 import { drawBarChart, updateBarChart } from "./barChart.js";
-import { createProgressBar } from "./progressBar.js";
-import { showTooltip } from "./tooltip.js";
 
 // global state to share components
 let state = {
@@ -34,65 +32,32 @@ async function initApp() {
       .map(key => d.properties[key] || 0)
   ));
 
-  // initialize / draw compoenents
-  state.updateProgressBar = createProgressBar(state);
-  setupScroll();
+  setupSlider();
   state.updateMap = createMap(state);
   drawBarChart(state);
   updateStory(state.year, state.story);
 }
 
-function setupScroll() {
-  // set scroll range
-  let maxScroll = window.innerHeight * 5;
+function setupSlider() {
+  const slider = document.getElementById("slider");
 
-  d3.select("main").on("wheel", (event) => {
-    // stops defualt page behavior from scrolling
-    event.preventDefault();
+  slider.addEventListener("input", (event) => {
+    const newYear = parseInt(event.target.value, 10);
 
-    // grabs the change in scroll position
-    let delta = event.deltaY;
-
-    // updates virtual scroll position
-    state.virtualScroll = Math.min(Math.max(state.virtualScroll + delta, 0), maxScroll);
-
-    // update progress bar with current virtual scroll
-    state.updateProgressBar(state);
-
-    // maps virtual scroll position to a year
-    let newYear = Math.round(2007 + (state.virtualScroll / maxScroll) * (2019 - 2007));
-
-    // once year position for scroll is new
     if (newYear !== state.year) {
-      // cheap fix of stroking bug on scroll
+      state.year = newYear;
+
+      // cheap fix of stroking bug
       d3.selectAll(".map-path")
         .attr("stroke", null)
         .attr("stroke-width", null);
 
-      state.year = newYear;
-
-      // update components
       state.updateMap(state);
       updateStory(state.year, state.story);
       updateBarChart(state);
-
-      // cheap fix to keep update tooltip on scroll
-      const hoveredElement = d3.select(".map-path:hover");
-      if (!hoveredElement.empty()) {
-        const d = hoveredElement.datum();
-        showTooltip(lastMousePosition, d, state.year);
-      }
     }
-
-    // allows for preventDefault to be used
-  }, { passive: false });
+  });
 }
-
-let lastMousePosition = { pageX: 0, pageY: 0 };
-
-document.addEventListener("mousemove", (event) => {
-  lastMousePosition = { pageX: event.pageX, pageY: event.pageY };
-});
 
 // begin the app
 initApp();

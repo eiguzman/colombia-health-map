@@ -35,16 +35,19 @@
     </p>
 
   </header>
-  <!-- Explorable Section -->
-  <p><strong>Story Progress Bar</strong></p>
-  <div id="progress-bar"></div>
-  <main>
 
+  <div id="slider-container">
+    <span>Year</span>
+    <input type="range" name="slider" id="slider" min="2007" max="2019" step="1">
+  </div>
+
+  <main>
     <!-- Map Section -->
     <div id="left-column">
       <p><strong>Incidence Rate per 100,000 People</strong></p>
       <div id="legend"></div>
       <svg id="map"></svg>
+      <div id="tooltip"></div>
     </div>
 
     <!-- Story and Bar Plot Section -->
@@ -67,7 +70,6 @@
       sint?
     </p>
   </div>
-  <div id="tooltip"></div>
 
   <!-- Single Script Import After D3 -->
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>

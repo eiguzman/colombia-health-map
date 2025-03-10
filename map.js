@@ -22,16 +22,14 @@ export function createMap(state) {
             .attr("viewBox", `0 0 ${mapObj.width} ${mapObj.height}`)
             .attr("preserveAspectRatio", "xMidYMid meet");
 
+        const g = mapObj.svg.append("g");
+
         mapObj.projection = d3.geoMercator()
-            .fitExtent([
-                [10, 10],
-                [mapObj.width - 10, mapObj.height - 10]],
-                state.data
-            );
+            .fitExtent([[10, 10], [mapObj.width - 10, mapObj.height - 10]], state.data);
 
         mapObj.path = d3.geoPath().projection(mapObj.projection);
 
-        mapObj.paths = mapObj.svg.selectAll("path")
+        mapObj.paths = g.selectAll("path")
             .data(state.data.features)
             .join("path")
             .attr("class", "map-path")
@@ -40,6 +38,15 @@ export function createMap(state) {
             .on("mouseover", (event, d) => showTooltip(event, d, state.year))
             .on("mousemove", (event) => moveTooltip(event))
             .on("mouseout", () => hideTooltip());
+
+        const zoom = d3.zoom()
+            .scaleExtent([1, 8])
+            .translateExtent([[0, 0], [mapObj.width, mapObj.height]])
+            .on("zoom", (event) => {
+                g.attr("transform", event.transform);
+            });
+
+        mapObj.svg.call(zoom);
 
         state.mapChart = mapObj;
 

@@ -19,9 +19,6 @@ body {
     margin: auto;
     padding: 1em;
     background-color: rgb(28, 28, 28);
-    /* for the virtual scrolling */
-    /* overflow: hidden; */
-    overflow-y: auto;
 }
 
 p {
@@ -43,19 +40,13 @@ main {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1em;
-    /* for the virtual scrolling */
-    position: relative;
-
-    background-color: rgba(0, 0, 0, 0.25);
-    border-radius: 2px;
-    border: solid black 1px;
-    padding: 1em;
 }
 
 #left-column {
     display: flex;
     flex-flow: column;
     align-items: center;
+    gap: 1em;
 }
 
 #right-column {
@@ -87,6 +78,7 @@ header p,
 #map {
     width: 100%;
     height: fit-content;
+    border-radius: 4px;
 }
 
 /* Tooltip */
@@ -137,12 +129,6 @@ header p,
 }
 
 /* Static and Dynamic */
-
-/* .story {
-    background-color: rgba(0, 0, 0, 0.25);
-    border-radius: 2px;
-    border: solid black 1px;
-} */
 
 .story p {
     padding: .5em 1em;
