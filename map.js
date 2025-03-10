@@ -35,9 +35,20 @@ export function createMap(state) {
             .attr("class", "map-path")
             .attr("d", mapObj.path)
             .style("cursor", "pointer")
-            .on("mouseover", (event, d) => showTooltip(event, d, state.year))
+            .on("mouseover", function (event, d) {
+                d3.select(this)
+                    .attr("stroke", "black")
+                    .attr("stroke-width", 1);
+
+                showTooltip(event, d, state.year);
+            })
             .on("mousemove", (event) => moveTooltip(event))
-            .on("mouseout", () => hideTooltip());
+            .on("mouseout", function () {
+                d3.select(this)
+                    .attr("stroke", null);
+
+                hideTooltip();
+            });
 
         const zoom = d3.zoom()
             .scaleExtent([1, 8])

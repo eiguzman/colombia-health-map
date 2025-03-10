@@ -64,6 +64,21 @@ export function updateBarChart(state) {
       .attr("width", 0)
       .attr("fill", d => state.mapChart.colorScale(d.value))
       .on("mouseover", (event, d) => {
+        // dim all bars except the hovered one
+        d3.selectAll(".bar")
+          .interrupt()
+          .transition()
+          .duration(200)
+          .style("opacity", 0.5);
+
+        d3.select(event.target)
+          .interrupt()
+          .transition()
+          .duration(200)
+          .style("opacity", 1)
+          .style("stroke", "black")
+          .style("stroke-width", 2);
+
         // detemines the correct municipality and strokes it
         const matchingMunicipalities = state.data.features.filter(
           p => p.properties.name === d.name
@@ -78,13 +93,27 @@ export function updateBarChart(state) {
           d3.selectAll(".map-path")
             .filter(p => p === topMunicipality)
             .attr("stroke", "black")
-            .attr("stroke-width", 2);
+            .attr("stroke-width", 1);
         }
 
         d3.select(event.target)
           .style("cursor", "pointer");
       })
       .on("mouseout", (event, d) => {
+        // restore all bars' opacity
+        d3.selectAll(".bar")
+          .interrupt()
+          .transition()
+          .duration(200)
+          .style("opacity", 1);
+
+        d3.select(event.target)
+          .interrupt()
+          .transition()
+          .duration(200)
+          .style("stroke", null)
+          .style("stroke-width", null);
+
         // detemines the correct municipality and unstrokes it
         const matchingMunicipalities = state.data.features.filter(
           p => p.properties.name === d.name
@@ -103,7 +132,8 @@ export function updateBarChart(state) {
         }
       })
       // animate the bars
-      .call(enter => enter.transition()
+      .call(enter => enter
+        .transition()
         .duration(750)
         .ease(d3.easeCubicOut)
         .attr("width", d => xScale(d.value))
