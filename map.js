@@ -66,24 +66,44 @@ export function createMap(state) {
     }
 
     function update(state) {
-        state.mapChart.colorScale = d3.scaleSequential(d3.interpolateReds)
-            .domain([Math.log1p(1), Math.log1p(state.globalMaxCases)])
-            .interpolator(d => (
-                d3.interpolateReds(
+
+        const selectedType = state.selectedDataType;
+
+        const interpolatorMap = {
+            "incident": d3.interpolateGreens,
+            "temp": d3.interpolateReds,
+            "prec": d3.interpolateBlues
+        };
+        const colorInterpolator = interpolatorMap[selectedType];
+
+        const maxForType = state.globalMaxCases[selectedType];
+
+        const scaleMin = selectedType === "incident" ? 1 : 0;
+        const scaleMax = selectedType === "incident" ? Math.log1p(maxForType) : maxForType;
+
+        state.mapChart.colorScale = d3.scaleSequential(colorInterpolator)
+            .domain([scaleMin, scaleMax]);
+
+        if (selectedType === "incident") {
+            state.mapChart.colorScale.interpolator(d => (
+                d3.interpolateGreens(
                     (Math.log1p(d) - Math.log1p(1)) /
-                    (Math.log1p(state.globalMaxCases) - Math.log1p(1))
+                    (Math.log1p(maxForType) -
+                        Math.log1p(1))
                 )
             ));
+        }
 
         state.mapChart.svg.selectAll("path")
             .transition()
             .duration(750)
             .ease(d3.easeCubicOut)
-            .attr("fill", d => (
-                state
-                    .mapChart
-                    .colorScale(d.properties[`incident_${state.year}`] || 1)
-            ));
+            .attr("fill", d => {
+                const value = d.properties[`${selectedType}_${state.year}`] || 0;
+                return state.mapChart.colorScale(value);
+            });
+
+        createLegend(state);
     }
 
     init();

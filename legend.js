@@ -13,9 +13,17 @@ export function createLegend(state) {
         .attr("viewBox", `0 0 ${legendWidth + margin.left + margin.right} 50`)
         .attr("preserveAspectRatio", "xMidYMid meet");
 
-    const legendScale = d3.scaleLog()
-        .domain([1, state.globalMaxCases])
-        .range([0, legendWidth]);
+    const selectedType = state.selectedDataType;
+    const maxForType = state.globalMaxCases[selectedType] || 1;
+
+    const legendScale = selectedType === "incident"
+        ? d3.scaleLog()
+            .domain([1, maxForType])
+            .range([0, legendWidth])
+        : d3.scaleLinear()
+            .domain([0, maxForType])
+            .range([0, legendWidth]);
+
 
     const defs = svg.append("defs");
     const linearGradient = defs.append("linearGradient")
@@ -27,7 +35,7 @@ export function createLegend(state) {
         .data(d3.range(0, 1.01, 0.1))
         .enter().append("stop")
         .attr("offset", d => `${d * 100}%`)
-        .attr("stop-color", d => state.mapChart.colorScale(d * state.globalMaxCases));
+        .attr("stop-color", d => state.mapChart.colorScale(d * maxForType));
 
     svg.append("rect")
         .attr("x", margin.left)
