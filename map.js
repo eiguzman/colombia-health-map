@@ -109,3 +109,40 @@ export function createMap(state) {
     init();
     return update;
 }
+
+export function zoomToRegion(regionName, state) {
+    const mapObj = state.mapChart;
+    const selectedType = state.selectedDataType;
+    const year = state.year;
+
+    const matchingLocations = state.data.features.filter(d => d.properties.name === regionName);
+
+    const bestLocation = matchingLocations.reduce((max, loc) => {
+        const value = loc.properties[`${selectedType}_${year}`] || 0;
+        return value > (max?.properties[`${selectedType}_${year}`] || 0) ? loc : max;
+    }, null);
+
+    const [[x0, y0], [x1, y1]] = d3.geoBounds(bestLocation);
+    const centroid = d3.geoCentroid(bestLocation);
+    const projection = mapObj.projection;
+    const [centerX, centerY] = projection(centroid);
+
+    const [[minX, minY], [maxX, maxY]] = d3.geoBounds(state.data);
+    const scaleFactor = Math.min(
+        (maxX - minX) / (x1 - x0),
+        (maxY - minY) / (y1 - y0)
+    );
+
+    const zoom = d3.zoom()
+        .scaleExtent([1, 8])
+        .on("zoom", (event) => {
+            mapObj.svg.select("g").attr("transform", event.transform);
+        });
+
+    mapObj.svg.transition()
+        .duration(750)
+        .call(zoom.transform, d3.zoomIdentity
+            .translate(mapObj.width / 2, mapObj.height / 2)
+            .scale(scaleFactor * 0.5)
+            .translate(-centerX, -centerY));
+}

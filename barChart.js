@@ -1,3 +1,5 @@
+import { zoomToRegion } from "./map.js";
+
 export function drawBarChart(state) {
   // setting up the bar plot container and dimentions
   const container = document.getElementById("bar-chart-container");
@@ -70,6 +72,10 @@ export function updateBarChart(state) {
       .attr("height", yScale.bandwidth())
       .attr("width", 0)
       .attr("fill", d => state.mapChart.colorScale(d.value))
+      .on("click", (event, d) => {
+        // call zoom function when a bar is clicked
+        zoomToRegion(d.name, state);
+      })
       .on("mouseover", (event, d) => {
         // dim all bars except the hovered one
         d3.selectAll(".bar")
@@ -92,8 +98,8 @@ export function updateBarChart(state) {
         );
 
         const topMunicipality = matchingMunicipalities.reduce((max, p) => {
-          const incidentRate = p.properties[`incident_${state.year}`] || 0;
-          return incidentRate > (max?.properties[`incident_${state.year}`] || 0) ? p : max;
+          const value = p.properties[`${selectedType}_${state.year}`] || 0;
+          return value > (max?.properties[`${selectedType}_${state.year}`] || 0) ? p : max;
         }, null);
 
         if (topMunicipality) {
@@ -131,12 +137,9 @@ export function updateBarChart(state) {
           return incidentRate > (max?.properties[`incident_${state.year}`] || 0) ? p : max;
         }, null);
 
-        if (topMunicipality) {
-          d3.selectAll(".map-path")
-            .filter(p => p === topMunicipality)
-            .attr("stroke", null)
-            .attr("stroke-width", null);
-        }
+        d3.selectAll(".map-path")
+          .attr("stroke", null)
+          .attr("stroke-width", null);
       })
       // animate the bars
       .call(enter => enter
