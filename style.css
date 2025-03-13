@@ -13,7 +13,7 @@ body {
     font: 100%/1.5 sans-serif, system-ui;
     display: flex;
     flex-flow: column;
-    gap: 1em;
+    gap: 2em;
     max-width: 1200px;
     min-height: 100vh;
     margin: auto;
@@ -88,6 +88,7 @@ header p,
     background: white;
     padding: 5px;
     border: 1px solid black;
+    border-radius: 4px;
     pointer-events: none;
     opacity: 0;
 }
