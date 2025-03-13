@@ -204,3 +204,50 @@ header p,
     font-size: 0.9em;
     color: rgb(191, 191, 191);
 }
+
+/* Dropdown */
+
+#dataType {
+    background-color: transparent;
+    border: 2px solid white;
+    border-radius: 2px;
+    color: white;
+    padding: 0.5em;
+    font-size: 1em;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+}
+
+#dataType::after {
+    content: '▼';
+    color: white;
+    font-size: 1em;
+    position: absolute;
+    right: 0.5em;
+    pointer-events: none;
+}
+
+.select-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 300px;
+}
+
+.select-wrapper select {
+    width: 100%;
+    padding-right: 0.5em;
+}
+
+.select-wrapper::after {
+    content: '▼';
+    font-size: 1em;
+    color: white;
+    position: absolute;
+    right: 0.5em;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}

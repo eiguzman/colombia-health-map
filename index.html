@@ -50,7 +50,14 @@
   <main>
     <!-- Map Section -->
     <div id="left-column">
-      <p><strong>Incidence Rate per 100,000 People</strong></p>
+      <!-- <p><strong>Incidence Rate per 100,000 People</strong></p> -->
+      <div class="select-wrapper">
+        <select id="dataType">
+          <option value="incident">Incidence Rate per 100,000 People</option>
+          <option value="temp">Average Temperature in Celsius</option>
+          <option value="prec">Average Precipitation in Millimeters</option>
+        </select>
+      </div>
       <div id="legend"></div>
       <svg id="map"></svg>
       <div id="tooltip"></div>
@@ -67,12 +74,6 @@
     </div>
 
   </main>
-
-  <select id="dataType">
-    <option value="incident">Incidents</option>
-    <option value="temp">Temperature</option>
-    <option value="prec">Precipitation</option>
-  </select>
 
   <!-- Extra Content Below the Main Section -->
   <div class="conclusion">
