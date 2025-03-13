@@ -33,6 +33,10 @@ combined = combined.merge(gdf[['id', 'geometry']], how='left', on='id')
 
 combined = gpd.GeoDataFrame(combined)
 
+# incidence rate, temperatures, and precipitation
+all_without_2019 = combined.loc[:, ~combined.columns.str.contains('2019')]
+# all_without_2019.to_file('../data/all_without_2019.geojson', driver='GeoJSON')
+
 # incident rate per 100,000 people
 # combined.to_file('../data/incident.geojson', driver='GeoJSON')
 
