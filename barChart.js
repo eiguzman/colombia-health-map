@@ -33,11 +33,12 @@ export function updateBarChart(state) {
   // grab and define some global state details
   const { bars, xScale, yScale, xAxisGroup, yAxisGroup } = state.barChart;
   const year = state.year;
+  const selectedType = state.selectedDataType;
 
   // get the data
   const data = state.data.features.map(d => ({
     name: d.properties.name,
-    value: d.properties[`incident_${year}`] || 0
+    value: d.properties[`${selectedType}_${year}`] || 0
   }));
 
   // sort and slice the top 10
@@ -47,6 +48,12 @@ export function updateBarChart(state) {
   // update x and y scales
   xScale.domain([0, d3.max(top10, d => d.value)]);
   yScale.domain(top10.map(d => d.name));
+
+  const colorInterpolator = {
+    "incident": d3.interpolateGreens,
+    "temp": d3.interpolateReds,
+    "prec": d3.interpolateBlues
+  }[selectedType];
 
   // link data to bars
   const barsSelection = bars.selectAll(".bar")
