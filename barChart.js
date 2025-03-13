@@ -23,8 +23,12 @@ export function drawBarChart(state) {
     bars,
     xScale: d3.scaleLinear().range([0, width - 200]),
     yScale: d3.scaleBand().range([0, height - 20]).padding(0.1),
-    xAxisGroup: bars.append("g").attr("class", "x-axis").attr("transform", `translate(0,${height - 20})`),
-    yAxisGroup: bars.append("g").attr("class", "y-axis")
+    xAxisGroup: bars.append("g")
+      .attr("class", "x-axis")
+      .attr("transform", `translate(0,${height - 20})`),
+    yAxisGroup: bars.append("g")
+      .attr("class", "y-axis")
+      .attr("transform", "translate(-8,0)")
   };
 
   // update the initial bar plot setup with current global state
