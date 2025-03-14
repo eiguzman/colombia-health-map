@@ -73,6 +73,11 @@ header p,
     max-width: 80ch;
 }
 
+/* drop down */
+option {
+    color: black;
+   }
+
 /* Map */
 
 #map {
