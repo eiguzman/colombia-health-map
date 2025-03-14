@@ -198,7 +198,11 @@ export function updateBarChart(state) {
     // this is when the labels updated (like their rank and thus position)
     update => update
       .interrupt() // keep to avoid a race condition bug
-      .text(d => d3.format(",.0f")(d.value))
+      .text(d => {
+        // Format based on selectedType
+        return selectedType === "temp" ? d3.format(".1f")(d.value) : d3.format(",.0f")(d.value);
+      })
+  
       // animate existing labels
       .call(update => update.transition()
         .duration(750)
