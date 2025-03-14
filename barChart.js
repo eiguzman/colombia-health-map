@@ -184,7 +184,10 @@ export function updateBarChart(state) {
       .attr("font-size", "12px")
       .attr("text-anchor", "end")
       .style("opacity", 0)
-      .text(d => d3.format(",.0f")(d.value))
+      .text(d => {
+        // Format temperature values to one decimal place
+        return selectedType === "temp" ? d3.format(".1f")(d.value) : d3.format(",.0f")(d.value);
+      })
       // animate the new labels
       .call(enter => enter.transition()
         .duration(750)
@@ -212,7 +215,10 @@ export function updateBarChart(state) {
   xAxisGroup
     .transition()
     .duration(750)
-    .call(d3.axisBottom(xScale).ticks(5).tickFormat(d3.format(",.0f")))
+    .call(d3.axisBottom(xScale).ticks(5).tickFormat(d => {
+      return selectedType === "temp" ? d3.format(".1f")(d) : d3.format(",.0f")(d);
+    }))
+
     .selectAll("text")
     .style("font-size", "14px");
 
