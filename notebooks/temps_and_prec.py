@@ -2,22 +2,26 @@ import numpy as np
 import pandas as pd
 import geopandas as gpd
 import altair as alt
+
+summer = ['jun','jul','aug','sep']
+summer_regex = '|'.join(summer)
+
 alt.data_transformers.enable("vegafusion")
 
 df = pd.read_csv('../data/raw/metadata.csv')
 df.columns = df.columns.str.lower()
 
-id = df[['municipality code']]
-id.columns = ['id']
+idd = df[['municipality code']]
+idd.columns = ['id']
 
-temp = df.loc[:, df.columns.str.contains('temp')]
+temp_all = df.loc[:, df.columns.str.contains('temp')]
+temp_summ = temp_all.loc[:, temp_all.columns.str.contains(summer_regex, regex= True)]
+years = temp_summ.columns.str[-2:].unique().values
 
-years = temp.columns.str[-2:].unique().values
-
-avg_temps = [id['id']]
+avg_temps = [idd['id']]
 for year in years:
     avg_temps.append(
-        temp.loc[:, temp.columns.str.contains(year)].mean(axis=1)
+        temp_summ.loc[:, temp_summ.columns.str.contains(year)].max(axis=1)
     )
 
 yearly_temps = pd.concat(avg_temps, axis=1)
@@ -27,8 +31,7 @@ yearly_temps.columns = ['id'] + [
 ]
 
 prec = df.loc[:, df.columns.str.contains('prec')]
-
-avg_precs = [id['id']]
+avg_precs = [idd['id']]
 for year in years:
     avg_precs.append(
         prec.loc[:, prec.columns.str.contains(year)].mean(axis=1)

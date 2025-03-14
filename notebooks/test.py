@@ -6,11 +6,9 @@ alt.data_transformers.enable("vegafusion")
 
 df = pd.read_csv('../data/meta.csv')
 df = df.drop(columns=['illiterate', 'education', 'employed', 'unemployed', 'men', 'women', 'water', 'internet'])
-
 population = df[[f'pop{year}' for year in range(2007, 2020)]].values
 population = np.where(population == 0, np.nan, population)
 cases = df[[f'cases{year}' for year in range(2007, 2020)]].values
-
 incident = pd.DataFrame(cases / population * 100_000)
 incident.columns = [f'incident_{year}' for year in range(2007, 2020)]
 
@@ -28,14 +26,12 @@ combined = pd.concat([
 # combining with the dataset we've been working on
 combined = combined.merge(temps, how='left', on='id')
 combined = combined.merge(prec, how='left', on='id')
-
 combined = combined.merge(gdf[['id', 'geometry']], how='left', on='id')
-
 combined = gpd.GeoDataFrame(combined)
 
 # incidence rate, temperatures, and precipitation
 all_without_2019 = combined.loc[:, ~combined.columns.str.contains('2019')]
-# all_without_2019.to_file('../data/all_without_2019.geojson', driver='GeoJSON')
+all_without_2019.to_file('../data/all_without_2019.geojson', driver='GeoJSON')
 
 # incident rate per 100,000 people
 # combined.to_file('../data/incident.geojson', driver='GeoJSON')
