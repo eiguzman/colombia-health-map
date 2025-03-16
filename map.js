@@ -58,7 +58,6 @@ export function createMap(state) {
             });
 
         mapObj.svg.call(zoom);
-
         state.mapChart = mapObj;
 
         update(state);
@@ -66,18 +65,14 @@ export function createMap(state) {
     }
 
     function update(state) {
-
         const selectedType = state.selectedDataType;
-
         const interpolatorMap = {
             "incident": d3.interpolateGreens,
             "temp": d3.interpolateReds,
             "prec": d3.interpolateBlues
         };
         const colorInterpolator = interpolatorMap[selectedType];
-
         const maxForType = state.globalMaxCases[selectedType];
-
         const scaleMin = selectedType === "incident" ? 1 : 0;
         const scaleMax = selectedType === "incident" ? Math.log1p(maxForType) : maxForType;
 

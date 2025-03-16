@@ -1,4 +1,5 @@
 import { createMap } from "./map.js";
+import { createNewMap } from "./newMap.js";
 import { updateStory } from "./story.js";
 import { drawBarChart, updateBarChart } from "./barChart.js";
 
@@ -9,9 +10,11 @@ let state = {
   year: 2007,
   globalMaxCases: 0,
   mapChart: null,
+  newMapChart: null,
   updateMap: null,
   virtualScroll: 0,
-  selectedDataType: "incident"
+  selectedDataType: "incident",
+  selectedSocialDataType: "illiterate"
 };
 
 // entry point for app
@@ -44,6 +47,7 @@ async function initApp() {
 
   setupSlider();
   state.updateMap = createMap(state);
+  state.newMapChart = createNewMap(state);
   drawBarChart(state);
   updateStory(state.year, state.story);
   updateSliderColor(state.selectedDataType);
@@ -105,6 +109,11 @@ function updateSliderColor(type) {
   slider.style("background", colorMap[type]);
   sliderValue.style("background", colorMap[type]);
 }
+
+d3.select("#socialDataType").on("change", function () {
+  state.selectedSocialDataType = this.value;
+  state.newMapChart(state);
+});
 
 // begin the app
 initApp();

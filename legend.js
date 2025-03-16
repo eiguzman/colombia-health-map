@@ -1,20 +1,31 @@
-export function createLegend(state) {
-    const legendContainer = document.getElementById("legend");
+export function createLegend(state, ver="legend", x_max=null) {
+    console.log(state);
+    const legendContainer = document.getElementById(ver);
     legendContainer.innerHTML = "";
 
     const legendWidth = Math.min(legendContainer.clientWidth, 400);
     const legendHeight = 20;
     const margin = { left: 10, right: 10 };
-
-    const svg = d3.select("#legend")
+    const svg = d3.select('#' + ver)
         .append("svg")
         .attr("width", "100%")
         .attr("height", "50")
         .attr("viewBox", `0 0 ${legendWidth + margin.left + margin.right} 50`)
         .attr("preserveAspectRatio", "xMidYMid meet");
 
-    const selectedType = state.selectedDataType;
-    const maxForType = state.globalMaxCases[selectedType] || 1;
+    let selectedType;
+    let maxForType;
+
+    if (ver === "legend_2") {
+        maxForType = x_max;
+        console.log("legend", maxForType);
+        selectedType = state.selectedSocialDataType;
+    } else {
+        selectedType = state.selectedDataType;
+        console.log("first legend");
+        maxForType = state.globalMaxCases[selectedType] || 1;
+        console.log("maxfortype", maxForType)
+    }
 
     const legendScale = selectedType === "incident"
         ? d3.scaleLog()
@@ -23,8 +34,6 @@ export function createLegend(state) {
         : d3.scaleLinear()
             .domain([0, maxForType])
             .range([0, legendWidth]);
-
-
     const defs = svg.append("defs");
     const linearGradient = defs.append("linearGradient")
         .attr("id", "legend-gradient")

@@ -5,6 +5,7 @@ import altair as alt
 alt.data_transformers.enable("vegafusion")
 
 df = pd.read_csv('../data/meta.csv')
+df_stats = df[['illiterate', 'education', 'unemployed', 'water', 'internet']]
 df = df.drop(columns=['illiterate', 'education', 'employed', 'unemployed', 'men', 'women', 'water', 'internet'])
 population = df[[f'pop{year}' for year in range(2007, 2020)]].values
 population = np.where(population == 0, np.nan, population)
