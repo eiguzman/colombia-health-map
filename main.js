@@ -61,7 +61,6 @@ function setupSlider() {
     const minYear = +slider.attr("min");
     const maxYear = +slider.attr("max");
     const value = +slider.property("value");
-
     const percent = (value - minYear) / (maxYear - minYear);
     const sliderWidth = slider.node().offsetWidth;
     const offset = percent * sliderWidth;
@@ -99,7 +98,6 @@ d3.select("#dataType").on("change", function () {
 function updateSliderColor(type) {
   const slider = d3.select("#slider");
   const sliderValue = d3.select("#slider-value");
-
   const colorMap = {
     "incident": "rgb(77, 179, 77)",
     "temp": "rgb(228, 58, 58)",

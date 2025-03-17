@@ -15,7 +15,6 @@ export function createMap(state) {
     function init() {
         const [[x0, y0], [x1, y1]] = d3.geoBounds(state.data);
         mapObj.height = mapObj.width * ((y1 - y0) / (x1 - x0));
-
         mapObj.svg = d3.select("#map")
             .attr("width", "100%")
             .attr("height", "100%")
@@ -26,9 +25,7 @@ export function createMap(state) {
 
         mapObj.projection = d3.geoMercator()
             .fitExtent([[10, 10], [mapObj.width - 10, mapObj.height - 10]], state.data);
-
         mapObj.path = d3.geoPath().projection(mapObj.projection);
-
         mapObj.paths = g.selectAll("path")
             .data(state.data.features)
             .join("path")
@@ -109,25 +106,20 @@ export function zoomToRegion(regionName, state) {
     const mapObj = state.mapChart;
     const selectedType = state.selectedDataType;
     const year = state.year;
-
     const matchingLocations = state.data.features.filter(d => d.properties.name === regionName);
-
     const bestLocation = matchingLocations.reduce((max, loc) => {
         const value = loc.properties[`${selectedType}_${year}`] || 0;
         return value > (max?.properties[`${selectedType}_${year}`] || 0) ? loc : max;
     }, null);
-
     const [[x0, y0], [x1, y1]] = d3.geoBounds(bestLocation);
     const centroid = d3.geoCentroid(bestLocation);
     const projection = mapObj.projection;
     const [centerX, centerY] = projection(centroid);
-
     const [[minX, minY], [maxX, maxY]] = d3.geoBounds(state.data);
     const scaleFactor = Math.min(
         (maxX - minX) / (x1 - x0),
         (maxY - minY) / (y1 - y0)
     );
-
     const zoom = d3.zoom()
         .scaleExtent([1, 8])
         .on("zoom", (event) => {

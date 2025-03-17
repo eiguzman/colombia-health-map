@@ -1,5 +1,5 @@
 import { showTooltip, moveTooltip, hideTooltip } from "./tooltip.js";
-import { createLegend } from "./legend.js";
+import { createNewLegend } from "./newLegend.js";
 
 export function createNewMap(state) {
     const newMapObj = {
@@ -23,9 +23,7 @@ export function createNewMap(state) {
 
         newMapObj.projection = d3.geoMercator()
             .fitExtent([[10, 10], [newMapObj.width - 10, newMapObj.height - 10]], state.data);
-
         newMapObj.path = d3.geoPath().projection(newMapObj.projection);
-
         newMapObj.paths = g.selectAll("path")
             .data(state.data.features)
             .join("path")
@@ -36,14 +34,12 @@ export function createNewMap(state) {
                 d3.select(this)
                     .attr("stroke", "black")
                     .attr("stroke-width", 1);
-
                 showTooltip(event, d, state.year);
             })
             .on("mousemove", (event) => moveTooltip(event))
             .on("mouseout", function () {
                 d3.select(this)
                     .attr("stroke", null);
-
                 hideTooltip();
             });
             
@@ -55,8 +51,10 @@ export function createNewMap(state) {
             });
         
         newMapObj.svg.call(zoom);
+        state.newMapChart = newMapObj;
+
         update(state);
-        createLegend(state, "legend_2", 34.28);
+        createNewLegend(state);
     }
 
     function update(state) {
@@ -70,20 +68,18 @@ export function createNewMap(state) {
         };
         const colorInterpolator = interpolatorMap[selectedType];
         const maxForType = d3.max(state.data.features, d => d.properties[selectedType] || 0);
-        console.log(maxForType);
 
-        newMapObj.colorScale = d3.scaleSequential(colorInterpolator)
+        state.newMapChart.colorScale = d3.scaleSequential(colorInterpolator)
             .domain([0, maxForType]);
-
         newMapObj.paths.transition()
             .duration(750)
             .ease(d3.easeCubicOut)
             .attr("fill", d => {
                 const value = d.properties[selectedType] || 0;
-                return newMapObj.colorScale(value);
+                return state.newMapChart.colorScale(value);
             });
-
-        createLegend(state, "legend_2", maxForType);
+            
+        createNewLegend(state);
     }
 
     init();

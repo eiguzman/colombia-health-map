@@ -100,7 +100,7 @@ option {
 
 /* Legend */
 
-#legend, #legend_2 {
+#legend, #new-legend {
     width: 100%;
     max-width: 400px;
     margin: auto;
@@ -113,11 +113,6 @@ option {
     width: 100%;
     height: auto;
 }
-
-/* #legend_2 svg {
-    width: 100%;
-    height: auto;
-} */
 
 /* Bar */
 
