@@ -23,10 +23,10 @@ export function createNewLegend(state) {
         .attr("x2", "100%").attr("y2", "0%");
     const interpolatorMap = {
         "illiterate": d3.interpolateGreys,
-        "education": d3.interpolateBlues,
+        "education": d3.interpolate('#ffffff', '#A8964D'),
         "unemployed": d3.interpolateReds,
-        "water": d3.interpolateGreens,
-        "internet": d3.interpolatePurples
+        "water": d3.interpolateBlues,
+        "internet": d3.interpolate('#ffffff', '#437078')
     };
     const colorInterpolator = interpolatorMap[selectedType];
 

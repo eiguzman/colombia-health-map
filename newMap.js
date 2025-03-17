@@ -61,10 +61,10 @@ export function createNewMap(state) {
         const selectedType = state.selectedSocialDataType;
         const interpolatorMap = {
             "illiterate": d3.interpolateGreys,
-            "education": d3.interpolateBlues,
+            "education": d3.interpolate('#ffffff', '#A8964D'),
             "unemployed": d3.interpolateReds,
-            "water": d3.interpolateGreens,
-            "internet": d3.interpolatePurples
+            "water": d3.interpolateBlues,
+            "internet": d3.interpolate('#ffffff', '#437078')
         };
         const colorInterpolator = interpolatorMap[selectedType];
         const maxForType = d3.max(state.data.features, d => d.properties[selectedType] || 0);
@@ -78,7 +78,7 @@ export function createNewMap(state) {
                 const value = d.properties[selectedType] || 0;
                 return state.newMapChart.colorScale(value);
             });
-            
+
         createNewLegend(state);
     }
 
