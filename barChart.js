@@ -110,7 +110,7 @@ export function updateBarChart(state) {
           d3.selectAll(".map-path")
             .filter(p => p === topMunicipality)
             .attr("stroke", "black")
-            .attr("stroke-width", 1);
+            .attr("stroke-width", 5);
         }
 
         d3.select(event.target)

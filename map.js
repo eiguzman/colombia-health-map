@@ -2,6 +2,7 @@ import { showTooltip, moveTooltip, hideTooltip } from "./tooltip.js";
 import { createLegend } from "./legend.js";
 
 export function createMap(state) {
+    // Initial map vars
     const mapObj = {
         width: 800,
         height: 600,
@@ -10,10 +11,13 @@ export function createMap(state) {
         projection: null,
         colorScale: null,
         paths: null,
+        path2: null,
     };
 
     function init() {
+        // Extract map boundaries
         const [[x0, y0], [x1, y1]] = d3.geoBounds(state.data);
+
         mapObj.height = mapObj.width * ((y1 - y0) / (x1 - x0));
         mapObj.svg = d3.select("#map")
             .attr("width", "100%")
@@ -35,7 +39,7 @@ export function createMap(state) {
             .on("mouseover", function (event, d) {
                 d3.select(this)
                     .attr("stroke", "black")
-                    .attr("stroke-width", 1);
+                    .attr("stroke-width", .2);
 
                 showTooltip(event, d, state.year);
             })
@@ -59,6 +63,57 @@ export function createMap(state) {
 
         update(state);
         createLegend(state);
+        createPOI(state);
+    }
+
+    function createPOI(state) {
+        // Select Points of Interest
+        const targetMunicipalities = ["Medellín", "Bogotá, D.C.", "Cali", "Barranquilla"];
+        const featuresCopy = structuredClone(state.data.features);
+        const filteredFeatures = featuresCopy.filter(feature => 
+            targetMunicipalities.includes(feature.properties.name)
+        );
+        // generate centroids for selected municipalities
+        const centroids = filteredFeatures.map(feature => {
+            const centroid = d3.geoCentroid(feature);
+            return {
+                name: feature.properties.name,
+                centroid: centroid
+            };
+        });
+        const svgGroup = d3.select("#map").select("g");
+        const pois = svgGroup.selectAll("polygon.poi")
+            .data(centroids, d => d.name);
+        // Remove existing POI
+        pois.exit().remove();
+        // Generate POI
+        pois.enter()
+            .append("polygon")
+            .attr("class", "poi")
+            .attr("fill", "orange")
+            .attr("stroke", "black")
+            .attr("stroke-width", 1)
+            .each(function(d) {
+                const [x, y] = mapObj.projection(d.centroid);
+                const starSize = 6;
+                const starPoints = generateStarPoints(0, 0, starSize, 5);
+                d3.select(this)
+                    .attr("points", starPoints)
+                    .attr("transform", `translate(${x}, ${y})`);
+            });
+    }
+    // Helper function to generate star points
+    function generateStarPoints(cx, cy, r, numPoints) {
+        const points = [];
+        const angle = Math.PI / numPoints;
+        for (let i = 0; i < 2 * numPoints; i++) {
+            const r_i = (i % 2 === 0) ? r : r / 2;
+            const theta = i * angle;
+            const x = cx + r_i * Math.sin(theta);
+            const y = cy - r_i * Math.cos(theta);
+            points.push(`${x},${y}`);
+        }
+        return points.join(" ");
     }
 
     function update(state) {

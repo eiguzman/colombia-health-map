@@ -27,7 +27,7 @@ export function createNewMap(state) {
         newMapObj.paths = g.selectAll("path")
             .data(state.data.features)
             .join("path")
-            .attr("class", "map-path")
+            .attr("class", "new-map-path")
             .attr("d", newMapObj.path)
             .style("cursor", "pointer")
             .on("mouseover", function (event, d) {
@@ -55,6 +55,58 @@ export function createNewMap(state) {
 
         update(state);
         createNewLegend(state);
+        createPOI(state);
+    }
+
+    function createPOI(state) {
+        // Select Points of Interest
+        const targetMunicipalities = ["Medellín", "Bogotá, D.C.", "Cali", "Barranquilla"];
+        const featuresCopy = structuredClone(state.data.features);
+        const filteredFeatures = featuresCopy.filter(feature => 
+            targetMunicipalities.includes(feature.properties.name)
+        );
+        // generate centroids for selected municipalities
+        const centroids = filteredFeatures.map(feature => {
+            const centroid = d3.geoCentroid(feature);
+            return {
+                name: feature.properties.name,
+                centroid: centroid
+            };
+        });
+        const svgGroup = d3.select("#new-map").select("g");
+        const pois = svgGroup.selectAll("polygon.poi")
+            .data(centroids, d => d.name);
+        // Remove existing POI
+        pois.exit().remove();
+        // Generate POI
+        pois.enter()
+            .append("polygon")
+            .attr("class", "poi")
+            .attr("fill", "orange")
+            .attr("stroke", "black")
+            .attr("stroke-width", .5)
+            .each(function(d) {
+                const [x, y] = newMapObj.projection(d.centroid);
+                const starSize = 4;
+                const starPoints = generateStarPoints(0, 0, starSize, 5);
+                d3.select(this)
+                    .attr("points", starPoints)
+                    .attr("transform", `translate(${x}, ${y})`);
+            });
+    }
+
+    // Helper function to generate star points
+    function generateStarPoints(cx, cy, r, numPoints) {
+        const points = [];
+        const angle = Math.PI / numPoints;
+        for (let i = 0; i < 2 * numPoints; i++) {
+            const r_i = (i % 2 === 0) ? r : r / 2;
+            const theta = i * angle;
+            const x = cx + r_i * Math.sin(theta);
+            const y = cy - r_i * Math.cos(theta);
+            points.push(`${x},${y}`);
+        }
+        return points.join(" ");
     }
 
     function update(state) {
