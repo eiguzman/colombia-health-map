@@ -7,6 +7,8 @@
   <!-- Styles Import -->
   <link rel="stylesheet" href="style.css">
   <title>Mapping Colombia</title>
+  <!-- Mapbox GL JS CSS -->
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.11.0/mapbox-gl.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -90,6 +92,19 @@
     <div id="new-legend"></div>
     <svg id="new-map"></svg>
   </div>
+
+  <br><br><br>
+  <h2>Does Elevation influence any of the above factors?</h2>
+
+  <div id="mapbox">
+    <svg></svg>
+  </div>
+  <!-- Mapbox GL JS JavaScript -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.11.0/mapbox-gl.js"></script>
+  <!-- Load D3.js from CDN -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>    
+  <!-- Load your custom map initialization script -->
+  <script src="mapbox.js"></script>
 
   <!-- Extra Content Below the Main Section -->
   <div class="conclusion">

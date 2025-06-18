@@ -261,3 +261,9 @@ option {
 option {
  color: black;   
 }
+
+#mapbox{
+    width: 100%;
+    height: 900px;
+    max-height: 600px;
+}
