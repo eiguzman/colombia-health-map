@@ -15,7 +15,7 @@
   <!-- Introduction / Hook Section -->
   <header>
 
-    <h1>Visualizing Dengue in Colombia</h1>
+    <h1>Defeating Dengue: A Colombia Health Mapping Project</h1>
 
     <p>
       Dengue fever, a viral illness transmitted by Aedes (Aedes aegypti) mosquitoes,
@@ -75,9 +75,21 @@
       <div class="story"></div>
     </div>
   </main>
+  <div id="mapinfo">
+    <p><em>Stars represent Colombia's most populous cities. Click on a star or on a bar in the graph to zoom.</em></p>
+  </div>
 
   <br><br><br>
   <h2>What Other Variables Have an Effect on Dengue Cases?</h2>
+
+  <p id="desc">
+    In addition to time series values, our dataset contains general statistics of each muicipality not directly tied to 
+    a certain year. These include <em>literacy rates, secondary education rates, unemployment rates, percentage of
+    households without water, and percentage of households without internet access</em>. The goal of mapping these 
+    statistics is to determine if there are any geographical trends that correlate with these factors, and to analyze 
+    if these factors have an influence on the incidence rates of dengue fever. Specifically, we want to determine if 
+    there exists a correlation between the municipalities with high incidence rates and high disparities.
+  </p>
 
   <div id="left-column">
     <div class="select-wrapper">
@@ -92,19 +104,38 @@
     <div id="new-legend"></div>
     <svg id="new-map"></svg>
   </div>
+  <div id="mapinfo">
+    <p><em>Incidence, Temperature, and Precipitation data are dependent on the slider in the first map. Update the 
+      slider to see more yearly data.</em></p>
+  </div>
 
   <br><br><br>
   <h2>Does Elevation influence any of the above factors?</h2>
 
+  <p id="desc">
+    You might have noticed a few interesting occurences in the Incidence map. First, there are a few locations where 
+    the incidence rate remains relatively low thoughout the years, despite having neighboring municipalities with 
+    drastically changing indicence rates. Specifically, there seems to be a cluster of municipalities in central and 
+    southwestern Colombia that share this trait. Additionally, these regions have historically low temperature and 
+    rainfall recordings. Is there an outside variable that can explain these coincidences? The map below showcases the 
+    geographical landscape of Colombia, as well as topographic markers describing the elevation in those regions. By 
+    mapping these additional features, we aim to capture more information about the relationship between incidence 
+    rates and the potential factors that correspond to them.
+  </p>
+
+  <div id="mapbox-legend"></div>
   <div id="mapbox">
     <svg></svg>
+  </div>
+  <div id="mapinfo">
+    <p><em>Topography lines describe the elevation above sea level (in meters).</em></p>
   </div>
   <!-- Mapbox GL JS JavaScript -->
   <script src="https://api.mapbox.com/mapbox-gl-js/v3.11.0/mapbox-gl.js"></script>
   <!-- Load D3.js from CDN -->
   <script src="https://d3js.org/d3.v7.min.js"></script>    
   <!-- Load your custom map initialization script -->
-  <script src="mapbox.js"></script>
+  <script type="module" src="mapbox.js"></script>
 
   <!-- Extra Content Below the Main Section -->
   <div class="conclusion">

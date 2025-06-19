@@ -36,9 +36,9 @@ export function showTooltip(event, d, year) {
             .html(`
                 <strong>${d.properties.name}</strong><br>
                 <hr />
-                <strong>Incidence Rate_${year}:</strong> <code>${incidentRate.toFixed(2)}</code><br>
-                <strong>Temperature_${year}:</strong> <code>${temperature.toFixed(2)}°C</code><br>
-                <strong>Precipitation_${year}:</strong> <code>${precipitation.toFixed(2)}mm</code><br>
+                <strong>Incidence Rate ${year}:</strong> <code>${incidentRate.toFixed(2)}</code><br>
+                <strong>Temperature ${year}:</strong> <code>${temperature.toFixed(2)}°C</code><br>
+                <strong>Precipitation ${year}:</strong> <code>${precipitation.toFixed(2)}mm</code><br>
                 <strong>Illiteracy Rate:</strong> <code>${illiterate.toFixed(2)}%</code><br>
                 <strong>Higher Education:</strong> <code>${education.toFixed(2)}%</code><br>
                 <strong>Unemployment:</strong> <code>${unemployed.toFixed(2)}%</code><br>

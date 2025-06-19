@@ -11,7 +11,6 @@ export function createMap(state) {
         projection: null,
         colorScale: null,
         paths: null,
-        path2: null,
     };
 
     function init() {
@@ -19,6 +18,8 @@ export function createMap(state) {
         const [[x0, y0], [x1, y1]] = d3.geoBounds(state.data);
 
         mapObj.height = mapObj.width * ((y1 - y0) / (x1 - x0));
+
+        // Generate map dimensions
         mapObj.svg = d3.select("#map")
             .attr("width", "100%")
             .attr("height", "100%")
@@ -40,25 +41,22 @@ export function createMap(state) {
                 d3.select(this)
                     .attr("stroke", "black")
                     .attr("stroke-width", .2);
-
                 showTooltip(event, d, state.year);
             })
             .on("mousemove", (event) => moveTooltip(event))
             .on("mouseout", function () {
                 d3.select(this)
                     .attr("stroke", null);
-
                 hideTooltip();
             });
+        mapObj.zoom = d3.zoom()
+        .scaleExtent([1, 8])
+        .translateExtent([[0, 0], [mapObj.width, mapObj.height]])
+        .on("zoom", (event) => {
+            g.attr("transform", event.transform);
+        });
 
-        const zoom = d3.zoom()
-            .scaleExtent([1, 8])
-            .translateExtent([[0, 0], [mapObj.width, mapObj.height]])
-            .on("zoom", (event) => {
-                g.attr("transform", event.transform);
-            });
-
-        mapObj.svg.call(zoom);
+        mapObj.svg.call(mapObj.zoom);
         state.mapChart = mapObj;
 
         update(state);
@@ -73,7 +71,7 @@ export function createMap(state) {
         const filteredFeatures = featuresCopy.filter(feature => 
             targetMunicipalities.includes(feature.properties.name)
         );
-        // generate centroids for selected municipalities
+        // Generate centroids for selected municipalities
         const centroids = filteredFeatures.map(feature => {
             const centroid = d3.geoCentroid(feature);
             return {
@@ -84,8 +82,10 @@ export function createMap(state) {
         const svgGroup = d3.select("#map").select("g");
         const pois = svgGroup.selectAll("polygon.poi")
             .data(centroids, d => d.name);
+
         // Remove existing POI
         pois.exit().remove();
+
         // Generate POI
         pois.enter()
             .append("polygon")
@@ -99,9 +99,15 @@ export function createMap(state) {
                 const starPoints = generateStarPoints(0, 0, starSize, 5);
                 d3.select(this)
                     .attr("points", starPoints)
-                    .attr("transform", `translate(${x}, ${y})`);
+                    .attr("transform", `translate(${x}, ${y})`)
+                    // Add click event to zoom into the star
+                    .on("click", () => {
+                        // Call zoomToStar with the centroid
+                        zoomToStar(d.centroid, state);
+                    });
             });
     }
+
     // Helper function to generate star points
     function generateStarPoints(cx, cy, r, numPoints) {
         const points = [];
@@ -114,6 +120,31 @@ export function createMap(state) {
             points.push(`${x},${y}`);
         }
         return points.join(" ");
+    }
+
+    function zoomToStar(centroid, state) {
+        const mapObj = state.mapChart;
+        const projection = mapObj.projection;
+        const svg = mapObj.svg;
+        const zoom = mapObj.zoom; // access the zoom behavior
+
+        // Convert centroid to pixel coordinates
+        const [x, y] = projection(centroid);
+
+        // Determine scale for zooming in
+        const zoomScale = 4; // Adjust as needed for zoom level
+        const translateX = mapObj.width / 2 - x * zoomScale;
+        const translateY = mapObj.height / 2 - y * zoomScale;
+
+        // Create the transform
+        const transform = d3.zoomIdentity
+            .translate(translateX, translateY)
+            .scale(zoomScale);
+
+        // Transition to zoom into the star
+        svg.transition()
+            .duration(750)
+            .call(zoom.transform, transform);
     }
 
     function update(state) {

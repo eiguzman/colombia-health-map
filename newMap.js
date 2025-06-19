@@ -2,6 +2,7 @@ import { showTooltip, moveTooltip, hideTooltip } from "./tooltip.js";
 import { createNewLegend } from "./newLegend.js";
 
 export function createNewMap(state) {
+    // Initial map vars
     const newMapObj = {
         width: 800,
         height: 600,
@@ -13,6 +14,7 @@ export function createNewMap(state) {
     };
 
     function init() {
+        // Generate map dimensions
         newMapObj.svg = d3.select("#new-map")
             .attr("width", "100%")
             .attr("height", "100%")
@@ -42,16 +44,15 @@ export function createNewMap(state) {
                     .attr("stroke", null);
                 hideTooltip();
             });
-            
-        const zoom = d3.zoom()
-            .scaleExtent([1, 8])
-            .translateExtent([[0, 0], [newMapObj.width, newMapObj.height]])
-            .on("zoom", (event) => {
-                g.attr("transform", event.transform);
-            });
+        newMapObj.zoom = d3.zoom()
+        .scaleExtent([1, 8])
+        .translateExtent([[0, 0], [newMapObj.width, newMapObj.height]])
+        .on("zoom", (event) => {
+            g.attr("transform", event.transform);
+        });
         
-        newMapObj.svg.call(zoom);
-        state.newMapChart = newMapObj;
+        newMapObj.svg.call(newMapObj.zoom);
+        state.newnewM = newMapObj;
 
         update(state);
         createNewLegend(state);
@@ -76,8 +77,10 @@ export function createNewMap(state) {
         const svgGroup = d3.select("#new-map").select("g");
         const pois = svgGroup.selectAll("polygon.poi")
             .data(centroids, d => d.name);
+
         // Remove existing POI
         pois.exit().remove();
+
         // Generate POI
         pois.enter()
             .append("polygon")
@@ -91,7 +94,12 @@ export function createNewMap(state) {
                 const starPoints = generateStarPoints(0, 0, starSize, 5);
                 d3.select(this)
                     .attr("points", starPoints)
-                    .attr("transform", `translate(${x}, ${y})`);
+                    .attr("transform", `translate(${x}, ${y})`)
+                    // Add click event to zoom into the star
+                    .on("click", () => {
+                        // Call zoomToStar with the centroid
+                        zoomToStar(d.centroid, state);
+                    });
             });
     }
 
@@ -109,6 +117,31 @@ export function createNewMap(state) {
         return points.join(" ");
     }
 
+    function zoomToStar(centroid, state) {
+        const newMapObj = state.newnewM;
+        const projection = newMapObj.projection;
+        const svg = newMapObj.svg;
+        const zoom = newMapObj.zoom; // access the zoom behavior
+
+        // Convert centroid to pixel coordinates
+        const [x, y] = projection(centroid);
+
+        // Determine scale for zooming in
+        const zoomScale = 4; // Adjust as needed for zoom level
+        const translateX = newMapObj.width / 2 - x * zoomScale;
+        const translateY = newMapObj.height / 2 - y * zoomScale;
+
+        // Create the transform
+        const transform = d3.zoomIdentity
+            .translate(translateX, translateY)
+            .scale(zoomScale);
+
+        // Transition to zoom into the star
+        svg.transition()
+            .duration(750)
+            .call(zoom.transform, transform);
+    }
+
     function update(state) {
         const selectedType = state.selectedSocialDataType;
         const interpolatorMap = {
@@ -121,19 +154,50 @@ export function createNewMap(state) {
         const colorInterpolator = interpolatorMap[selectedType];
         const maxForType = d3.max(state.data.features, d => d.properties[selectedType] || 0);
 
-        state.newMapChart.colorScale = d3.scaleSequential(colorInterpolator)
+        state.newnewM.colorScale = d3.scaleSequential(colorInterpolator)
             .domain([0, maxForType]);
         newMapObj.paths.transition()
             .duration(750)
             .ease(d3.easeCubicOut)
             .attr("fill", d => {
                 const value = d.properties[selectedType] || 0;
-                return state.newMapChart.colorScale(value);
+                return state.newnewM.colorScale(value);
             });
-
         createNewLegend(state);
     }
 
     init();
     return update;
+}
+
+export function zoomToRegion(regionName, state) {
+    const newMapObj = state.newMapChart;
+    const selectedType = state.selectedDataType;
+    const year = state.year;
+    const matchingLocations = state.data.features.filter(d => d.properties.name === regionName);
+    const bestLocation = matchingLocations.reduce((max, loc) => {
+        const value = loc.properties[`${selectedType}_${year}`] || 0;
+        return value > (max?.properties[`${selectedType}_${year}`] || 0) ? loc : max;
+    }, null);
+    const [[x0, y0], [x1, y1]] = d3.geoBounds(bestLocation);
+    const centroid = d3.geoCentroid(bestLocation);
+    const projection = newMapObj.projection;
+    const [centerX, centerY] = projection(centroid);
+    const [[minX, minY], [maxX, maxY]] = d3.geoBounds(state.data);
+    const scaleFactor = Math.min(
+        (maxX - minX) / (x1 - x0),
+        (maxY - minY) / (y1 - y0)
+    );
+    const zoom = d3.zoom()
+        .scaleExtent([1, 8])
+        .on("zoom", (event) => {
+            newMapObj.svg.select("g").attr("transform", event.transform);
+        });
+
+    newMapObj.svg.transition()
+        .duration(750)
+        .call(zoom.transform, d3.zoomIdentity
+            .translate(newMapObj.width / 2, newMapObj.height / 2)
+            .scale(scaleFactor * 0.5)
+            .translate(-centerX, -centerY));
 }
