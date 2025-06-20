@@ -18,7 +18,7 @@ body {
     min-height: 100vh;
     margin: auto;
     padding: 1em;
-    background-color: rgb(28, 28, 28);
+    background-color: rgb(10, 10, 10);
 }
 
 p {
@@ -85,6 +85,12 @@ option {
     width: 100%;
     height: fit-content;
     border-radius: 4px;
+    background-color: rgb(20, 20, 20);
+}
+
+#new-map {
+    max-width: 70ch;
+    background-color: rgb(20, 20, 20);
 }
 
 /* Tooltip */

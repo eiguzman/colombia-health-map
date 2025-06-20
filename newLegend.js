@@ -23,9 +23,9 @@ export function createNewLegend(state) {
         .attr("x2", "100%").attr("y2", "0%");
     const interpolatorMap = {
         "illiterate": d3.interpolateGreys,
-        "education": d3.interpolate('#ffffff', '#A8964D'),
+        "education": d3.interpolate('#ffffff', '#524335'),
         "unemployed": d3.interpolateReds,
-        "water": d3.interpolateBlues,
+        "water": d3.interpolate('#ffffff', '#334878'),
         "internet": d3.interpolate('#ffffff', '#437078')
     };
     const colorInterpolator = interpolatorMap[selectedType];

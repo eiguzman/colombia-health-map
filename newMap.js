@@ -14,6 +14,10 @@ export function createNewMap(state) {
     };
 
     function init() {
+        const [[x0, y0], [x1, y1]] = d3.geoBounds(state.data);
+
+        newMapObj.height = newMapObj.width * ((y1 - y0) / (x1 - x0));
+
         // Generate map dimensions
         newMapObj.svg = d3.select("#new-map")
             .attr("width", "100%")
@@ -146,9 +150,9 @@ export function createNewMap(state) {
         const selectedType = state.selectedSocialDataType;
         const interpolatorMap = {
             "illiterate": d3.interpolateGreys,
-            "education": d3.interpolate('#ffffff', '#A8964D'),
+            "education": d3.interpolate('#ffffff', '#524335'),
             "unemployed": d3.interpolateReds,
-            "water": d3.interpolateBlues,
+            "water": d3.interpolate('#ffffff', '#334878'),
             "internet": d3.interpolate('#ffffff', '#437078')
         };
         const colorInterpolator = interpolatorMap[selectedType];
