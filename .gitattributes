@@ -1,6 +1,5 @@
 * linguist-vendored
-notebooks/eda-edgar.ipynb linguist-vendored=false
-notebooks/temps_and_prec.py linguist-vendored=false
+*.py linguist-vendored=false
 *.js linguist-vendored=false
 *.css linguist-vendored=false
 *.html linguist-vendored=false
